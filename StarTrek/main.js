@@ -27,7 +27,7 @@ function main() {
     var rotation = [degToRad(40), degToRad(25), degToRad(325)];
     var scale = [1, 1, 1];
     var fieldOfViewRadians = degToRad(60);
-
+    
     drawScene();
 
     webglLessonsUI.setupSlider("#fieldOfView", {value: radToDeg(fieldOfViewRadians), slide: updateFieldOfView, min: 1, max: 179});
@@ -106,17 +106,10 @@ function main() {
             colorLocation, size, type, normalize, stride, offset
         );
 
-        var left = 0;
-        var right = gl.canvas.clientWidth;
-        var bottom = gl.canvas.clientHeight;
-        var top = 0;
-        var near = 100;
-        var far = -500;
-        
         var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
         var zNear = 1;
         var zFar = -2000;
-
+        
         var matrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
         matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
         matrix = m4.xRotate(matrix, rotation[0]);
