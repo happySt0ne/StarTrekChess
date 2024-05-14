@@ -1,7 +1,7 @@
 "use strict";
 import * as shader from './shaders/shadersPackage.js'
-import { radToDeg, degToRad } from './mathSupporter.js';
 import Camera from './camera.js';
+import cameraController from './cameraController.js';
 
 function main() { 
     var canvas = document.querySelector("#canvas");
@@ -20,25 +20,14 @@ function main() {
     var positionBuffer = gl.createBuffer();
 
 //#region настройка цвета
-        var colorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        setCuboidColors(gl);
+    var colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    setCuboidColors(gl);
 //#endregion
+
+    cameraController.enableCameraController();
 
     setInterval(drawScene, 30);
-//#region Слайдеры.
-    webglLessonsUI.setupSlider("#fieldOfView", {value: radToDeg(Camera.fieldOfViewRadians), slide: Camera.updateFieldOfView, min: 1, max: 179});
-    webglLessonsUI.setupSlider("#x", {value: Camera.translation[0], slide: Camera.updatePosition(0), min: -200, max: 200 });
-    webglLessonsUI.setupSlider("#y", {value: Camera.translation[1], slide: Camera.updatePosition(1), min: -200, max: 200});
-    webglLessonsUI.setupSlider("#z", {value: Camera.translation[2], slide: Camera.updatePosition(2), min: -1000, max: 0});
-    webglLessonsUI.setupSlider("#angleX", {value: radToDeg(Camera.rotation[0]), slide: Camera.updateRotation(0), max: 360});
-    webglLessonsUI.setupSlider("#angleY", {value: radToDeg(Camera.rotation[1]), slide: Camera.updateRotation(1), max: 360});
-    webglLessonsUI.setupSlider("#angleZ", {value: radToDeg(Camera.rotation[2]), slide: Camera.updateRotation(2), max: 360});
-    webglLessonsUI.setupSlider("#scaleX", {value: Camera.scale[0], slide: Camera.updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleY", {value: Camera.scale[1], slide: Camera.updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleZ", {value: Camera.scale[2], slide: Camera.updateScale(2), min: -5, max: 5, step: 0.01, precision: 2});
-//#endregion
-
 
     function drawScene() {
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
