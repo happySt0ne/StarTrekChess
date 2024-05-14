@@ -1,13 +1,13 @@
 "use strict";
 import * as shader from './shaders/shadersPackage.js'
-import m4 from './m4.js'
-import { radToDeg, degToRad } from './mathSupporter.js';
+import Camera from './camera.js';
+import cameraController from './cameraController.js';
 
 function main() { 
     var canvas = document.querySelector("#canvas");
     var gl = canvas.getContext("webgl");
     if (!gl) return;
-
+    
     var program = webglUtils.createProgramFromSources(
         gl, [shader.vertexShaderCode, shader.fragmentShaderCode]
     );
@@ -19,55 +19,15 @@ function main() {
 
     var positionBuffer = gl.createBuffer();
 
+//#region настройка цвета
     var colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     setCuboidColors(gl);
+//#endregion
 
-    var translation = [-150, 10, -360];
-    var rotation = [degToRad(40), degToRad(25), degToRad(325)];
-    var scale = [1, 1, 1];
-    var fieldOfViewRadians = degToRad(60);
+    cameraController.enableCameraController();
 
-    drawScene();
-
-    webglLessonsUI.setupSlider("#fieldOfView", {value: radToDeg(fieldOfViewRadians), slide: updateFieldOfView, min: 1, max: 179});
-    webglLessonsUI.setupSlider("#x", {value: translation[0], slide: updatePosition(0), min: -200, max: 200 });
-    webglLessonsUI.setupSlider("#y", {value: translation[1], slide: updatePosition(1), min: -200, max: 200});
-    webglLessonsUI.setupSlider("#z", {value: translation[2], slide: updatePosition(2), min: -1000, max: 0});
-    webglLessonsUI.setupSlider("#angleX", {value: radToDeg(rotation[0]), slide: updateRotation(0), max: 360});
-    webglLessonsUI.setupSlider("#angleY", {value: radToDeg(rotation[1]), slide: updateRotation(1), max: 360});
-    webglLessonsUI.setupSlider("#angleZ", {value: radToDeg(rotation[2]), slide: updateRotation(2), max: 360});
-    webglLessonsUI.setupSlider("#scaleX", {value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleY", {value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2});
-    webglLessonsUI.setupSlider("#scaleZ", {value: scale[2], slide: updateScale(2), min: -5, max: 5, step: 0.01, precision: 2});
-
-    function updateFieldOfView(event, ui) {
-        fieldOfViewRadians = degToRad(ui.value);
-        drawScene();
-    }
-
-    function updatePosition(index) {
-        return function(event, ui) {
-        translation[index] = ui.value;
-        drawScene();
-        };
-    }
-
-    function updateRotation(index) {
-        return function(event, ui) {
-        var angleInDegrees = ui.value;
-        var angleInRadians = angleInDegrees * Math.PI / 180;
-        rotation[index] = angleInRadians;
-        drawScene();
-        };
-    }
-
-    function updateScale(index) {
-        return function(event, ui) {
-        scale[index] = ui.value;
-        drawScene();
-        };
-    }
+    setInterval(drawScene, 30);
 
     function drawScene() {
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -91,7 +51,8 @@ function main() {
         var stride = 0;       
         var offset = 0;       
         gl.vertexAttribPointer(
-            positionLocation, size, type, normalize, stride, offset);
+            positionLocation, size, type, normalize, stride, offset
+        );
 
         gl.enableVertexAttribArray(colorLocation);
 
@@ -105,29 +66,11 @@ function main() {
         gl.vertexAttribPointer(
             colorLocation, size, type, normalize, stride, offset
         );
-
-        var left = 0;
-        var right = gl.canvas.clientWidth;
-        var bottom = gl.canvas.clientHeight;
-        var top = 0;
-        var near = 100;
-        var far = -500;
         
-        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var zNear = 1;
-        var zFar = -2000;
-
-        var matrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
-        matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
-        matrix = m4.xRotate(matrix, rotation[0]);
-        matrix = m4.yRotate(matrix, rotation[1]);
-        matrix = m4.zRotate(matrix, rotation[2]);
-        matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
-
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         setCuboidPoints(gl, 0, 0, 0, 100, 100, 100);
         
-        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+        gl.uniformMatrix4fv(matrixLocation, false, Camera.getMatrix());
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
         var count = 36;
@@ -136,7 +79,7 @@ function main() {
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         setCuboidPoints(gl, 300, 0, 0, 100, 100, 100);
 
-        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+        gl.uniformMatrix4fv(matrixLocation, false, Camera.getMatrix());
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
         var count = 36;
