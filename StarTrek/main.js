@@ -4,6 +4,7 @@ import Camera from './engine/camera.js';
 import cameraController from './engine/cameraController.js';
 import { setCuboidColors, setCuboidPoints } from './shaders/shadersHelper.js';
 import Tile from './engine/gameObjects/tile.js';
+import GameObject from './engine/gameObjects/gameObject.js';
 
 function main() { 
     var canvas = document.querySelector("#canvas");
@@ -26,8 +27,8 @@ function main() {
     
     cameraController.enableCameraController();
     
-    Tile.setBuffers(positionBuffer, colorBuffer);
-    Tile.setMatrixLocation(matrixLocation);
+    GameObject.setBuffers(positionBuffer, colorBuffer);
+    GameObject.setMatrixLocation(matrixLocation);
 
     var a = new Tile(1, 1, 1);
     var b = new Tile(1, 150, 1);
