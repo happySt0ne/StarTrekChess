@@ -30,8 +30,10 @@ function main() {
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
 
-    var a = new Tile(1, 1, 1);
-    var b = new Tile(1, 150, 1);
+    var listObject = [
+        new Tile(1, 1, 1), 
+        new Tile(1, 150, 1)
+    ];
 
     setInterval(drawScene, 30);
 
@@ -69,8 +71,7 @@ function main() {
             colorLocation, size, type, normalize, stride, offset
         );
         
-        a.draw();
-        b.draw();
+        listObject.forEach((e) => {e.draw()});
     }
 }
 
