@@ -1,5 +1,5 @@
-import m4 from './m4.js'
-import { radToDeg, degToRad } from './mathSupporter.js';
+import m4 from '../supportStuff/m4.js'
+import { radToDeg, degToRad } from '../supportStuff/mathSupporter.js';
 
 class Camera {
     static translation = [-150, 10, -360];
