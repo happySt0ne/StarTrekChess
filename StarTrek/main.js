@@ -2,7 +2,7 @@
 import * as shader from './shaders/shadersPackage.js'
 import Camera from './engine/camera.js';
 import cameraController from './engine/cameraController.js';
-import { setCuboidColors, setCuboidPoints } from './shaders/shadersHelper.js';
+import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite } from './shaders/shadersHelper.js';
 import Tile from './engine/gameObjects/tile.js';
 import GameObject from './engine/gameObjects/gameObject.js';
 
@@ -31,10 +31,10 @@ function main() {
     GameObject.setMatrixLocation(matrixLocation);
 
     var listObject = [
-        new Tile(1, 1, 1), 
-        new Tile(1, 150, 1)
+        new Tile(1, 1, 1, 'black'), 
+        new Tile(1, 150, 1, 'white')
     ];
-
+    setCuboidColorBlack();
     setInterval(drawScene, 30);
 
     function drawScene() {

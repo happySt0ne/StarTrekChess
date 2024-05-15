@@ -111,4 +111,18 @@ function setCuboidColors() {
     gl.STATIC_DRAW);
 }
 
-export {setCuboidColors, setCuboidPoints}
+function setCuboidColorWhite() {
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Uint8Array([...Array(118)].map(() => 255)),
+    gl.STATIC_DRAW);
+}
+
+function setCuboidColorBlack() {
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Uint8Array([...Array(118)].map(() => 0)),
+    gl.STATIC_DRAW);
+}
+
+export {setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite}

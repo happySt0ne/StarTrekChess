@@ -1,5 +1,5 @@
 import Camera from "../camera.js";
-import { setCuboidColors, setCuboidPoints } from '../../shaders/shadersHelper.js';
+import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite } from '../../shaders/shadersHelper.js';
 
 class GameObject {
     position;
@@ -40,10 +40,13 @@ class GameObject {
         this.colorBuffer = colorBuffer;
     }
 
+    setObjectColor() {
+        setCuboidColors();
+    }
+
     draw() {
         GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.colorBuffer);
-        setCuboidColors();
-
+        this.setObjectColor();
         GameObject.gl.uniformMatrix4fv(GameObject.matrixLocation, false, Camera.getMatrix());
         
         GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.positionBuffer);

@@ -1,5 +1,4 @@
-import Camera from "../camera.js";
-import { setCuboidColors, setCuboidPoints } from '../../shaders/shadersHelper.js';
+import {setCuboidColorWhite, setCuboidColorBlack  } from '../../shaders/shadersHelper.js';
 import GameObject from './gameObject.js';
 
 class Tile extends GameObject {    
@@ -8,9 +7,19 @@ class Tile extends GameObject {
         height: 30,
         depth: 100
     };
+    color;
 
-    constructor(x, y, z) { 
+    setObjectColor() {
+        if (this.color == 'black') {
+            setCuboidColorBlack();
+        } else {
+            setCuboidColorWhite();
+        }
+    }
+
+    constructor(x, y, z, color) { 
         super(x, y, z);
+        this.color = color;
     }
 }
 
