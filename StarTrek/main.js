@@ -1,15 +1,17 @@
 "use strict";
 import * as shader from './shaders/shadersPackage.js'
-import Camera from './engine/camera.js';
 import cameraController from './engine/cameraController.js';
-import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite } from './shaders/shadersHelper.js';
 import Tile from './engine/gameObjects/tile.js';
 import GameObject from './engine/gameObjects/gameObject.js';
 
 function main() { 
     var canvas = document.querySelector("#canvas");
     var gl = canvas.getContext("webgl");
-    if (!gl) return;
+    
+    if (!gl) {
+        alert('Ваш браузер не поддерживает WebGl');
+        return;
+    }
     
     var program = webglUtils.createProgramFromSources(
         gl, [shader.vertexShaderCode, shader.fragmentShaderCode]
@@ -34,7 +36,7 @@ function main() {
         new Tile(1, 1, 1, 'black'), 
         new Tile(1, 150, 1, 'white')
     ];
-    setCuboidColorBlack();
+
     setInterval(drawScene, 30);
 
     function drawScene() {

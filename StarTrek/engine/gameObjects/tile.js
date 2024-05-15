@@ -12,8 +12,10 @@ class Tile extends GameObject {
     setObjectColor() {
         if (this.color == 'black') {
             setCuboidColorBlack();
-        } else {
+        } else if (this.color == 'white') {
             setCuboidColorWhite();
+        } else {
+            super.setObjectColor();
         }
     }
 
