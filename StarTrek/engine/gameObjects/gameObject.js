@@ -3,7 +3,6 @@ import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWh
 
 class GameObject {
     position;
-    color;
 
     static positionBuffer;
     static matrixLocation;
