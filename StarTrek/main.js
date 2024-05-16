@@ -10,8 +10,7 @@ import {
 } from './supportStuff/shaderAttributes.js';
 
 function main() { 
-    var canvas = document.querySelector("#canvas");
-    var gl = canvas.getContext("webgl");
+    var gl = document.querySelector("#canvas").getContext("webgl");
 
     if (!gl) {
         alert('Ваш браузер не поддерживает WebGl');
@@ -37,12 +36,12 @@ function main() {
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
 
-    var listObject = [
+    var gameObjects = [
         new Desk(-300, 200, -500, 200),
         new GameObject(0, 0, 0)
     ];
 
-    var a = listObject[0].get(1, 3, 2);    
+    var a = gameObjects[0].get(1, 3, 2);    
     a.color = '';
     setInterval(drawScene, 30);
 
@@ -59,8 +58,9 @@ function main() {
         setShaderPositionAttrib(positionLocation, positionBuffer);
 
         setShaderColorAttrib(colorLocation, colorBuffer);
-        
-        listObject.forEach((e) => e.draw());
+
+        // Дальше можно отрисовывать объекты.
+        gameObjects.forEach((e) => e.draw());
     }
 }
 
