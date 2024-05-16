@@ -3,11 +3,16 @@ import * as shader from './shaders/shadersPackage.js'
 import cameraController from './engine/cameraController.js';
 import Tile from './engine/gameObjects/tile.js';
 import GameObject from './engine/gameObjects/gameObject.js';
+import Desk from './engine/gameObjects/desk.js';
+import { 
+    setShaderColorAttrib, 
+    setShaderPositionAttrib 
+} from './supportStuff/shaderAttributes.js';
 
 function main() { 
     var canvas = document.querySelector("#canvas");
     var gl = canvas.getContext("webgl");
-    
+
     if (!gl) {
         alert('Ваш браузер не поддерживает WebGl');
         return;
@@ -33,10 +38,12 @@ function main() {
     GameObject.setMatrixLocation(matrixLocation);
 
     var listObject = [
-        new Tile(1, 1, 1, 'black'), 
-        new Tile(1, 150, 1, 'white')
+        new Desk(-300, 200, -500, 200),
+        new GameObject(0, 0, 0)
     ];
 
+    var a = listObject[0].get(1, 3, 2);    
+    a.color = '';
     setInterval(drawScene, 30);
 
     function drawScene() {
@@ -49,31 +56,11 @@ function main() {
 
         gl.useProgram(program);
 
-        gl.enableVertexAttribArray(positionLocation);
+        setShaderPositionAttrib(positionLocation, positionBuffer);
 
-        var size = 3;         
-        var type = gl.FLOAT;  
-        var normalize = false;
-        var stride = 0;       
-        var offset = 0;       
-        gl.vertexAttribPointer(
-            positionLocation, size, type, normalize, stride, offset
-        );
-
-        gl.enableVertexAttribArray(colorLocation);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-
-        var size = 3;                 
-        var type = gl.UNSIGNED_BYTE;  
-        var normalize = true;         
-        var stride = 0;               
-        var offset = 0;               
-        gl.vertexAttribPointer(
-            colorLocation, size, type, normalize, stride, offset
-        );
+        setShaderColorAttrib(colorLocation, colorBuffer);
         
-        listObject.forEach((e) => {e.draw()});
+        listObject.forEach((e) => e.draw());
     }
 }
 
