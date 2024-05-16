@@ -9,7 +9,7 @@ class GameObject {
     static matrixLocation;
     static colorBuffer;
 
-    size = {
+    static size = {
         width: 100,
         height: 100,
         depth: 100
@@ -52,7 +52,7 @@ class GameObject {
         GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.positionBuffer);
         setCuboidPoints(
             this.position.x, this.position.y, this.position.z, 
-            this.size.width, this.size.height, this.size.depth
+            this.constructor.size.width, this.constructor.size.height, this.constructor.size.depth
         );
 
         var primitiveType = GameObject.gl.TRIANGLES;

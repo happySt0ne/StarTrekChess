@@ -2,9 +2,9 @@ import {setCuboidColorWhite, setCuboidColorBlack  } from '../../shaders/shadersH
 import GameObject from './gameObject.js';
 
 class Tile extends GameObject {    
-    size = {
+    static size = {
         width: 100,
-        height: 30,
+        height: 15,
         depth: 100
     };
     color;
