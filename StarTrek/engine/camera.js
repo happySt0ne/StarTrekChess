@@ -2,7 +2,7 @@ import m4 from '../supportStuff/m4.js'
 import { radToDeg, degToRad } from '../supportStuff/mathSupporter.js';
 
 class Camera {
-    static translation = [-150, 10, -360];
+    static translation = [-150, 10, -1000];
     static rotation = [degToRad(0), degToRad(0), degToRad(0)];
     static scale = [1, 1, 1];
     static fieldOfViewRadians = degToRad(60);
