@@ -9,7 +9,7 @@ import {
     setShaderPositionAttrib 
 } from './supportStuff/shaderAttributes.js';
 import Figure from './engine/gameObjects/figure.js';
-import { setupUiController } from './supportStuff/figureControllerUi.js'
+import FigureController from './engine/figureController.js';
 
 function main() { 
     var gl = document.querySelector("#canvas").getContext("webgl");
@@ -33,17 +33,20 @@ function main() {
     
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     
-    setupUiController();
-    
+    FigureController.setupUiController();
+
     cameraController.enableCameraController();
     
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
     
     var c = new Figure(0, 0, -500, 'white');
+    var desk = new Desk(-300, 200, -500, 200);
+
+    FigureController.setDesk(desk);
 
     var gameObjects = [
-        new Desk(-300, 200, -500, 200),
+        desk,
         c
     ];
 
