@@ -10,6 +10,7 @@ import {
 } from './supportStuff/shaderAttributes.js';
 import Figure from './engine/gameObjects/figure.js';
 import FigureController from './engine/figureController.js';
+import figureTypes from './engine/figureTypes.js';
 
 function main() { 
     var gl = document.querySelector("#canvas").getContext("webgl");
@@ -40,18 +41,20 @@ function main() {
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
     
-    var c = new Figure(0, 0, -500, 'white');
+    var c = new Figure(0, 0, -500, 'white', figureTypes.Pawn);
+    var c2 = new Figure(0, 0, 0, 'white');
+
     var desk = new Desk(-300, 200, -500, 200);
 
     FigureController.setDesk(desk);
 
     var gameObjects = [
         desk,
-        c
+        c, c2
     ];
 
-    var a = gameObjects[0].get(1, 2, 1);    
-    a.setFigure(c);
+    gameObjects[0].get(1, 4, 3).setFigure(c);
+    gameObjects[0].get(1, 3, 3).setFigure(c2);
 
     setInterval(drawScene, 30);
 

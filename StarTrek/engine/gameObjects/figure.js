@@ -14,13 +14,15 @@ class Figure extends GameObject {
         depth: 50
     };
 
-    get figureType() {
+    get type() {
         return this.#figureType;
     }
     
-    constructor(x, y, z, color) {
+    constructor(x, y, z, color, figureType) {
         super(x, y, z);
+
         this._color = color;
+        this.#figureType = figureType;
     }
 
     setObjectColor() {

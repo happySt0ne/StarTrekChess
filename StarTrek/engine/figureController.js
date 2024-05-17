@@ -2,6 +2,7 @@ import {
     isFocusInInputElement,
     containsOnlyDigits
 } from '../supportStuff/usefullFunctions.js';
+import MoveChecker from './moveChecker.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -9,7 +10,8 @@ class FigureController {
     static #desk;
 
     static setDesk(desk) {
-        FigureController.#desk = desk; 
+        this.#desk = desk; 
+        MoveChecker.setDesk(desk);
     }
 
     static setupUiController() {
@@ -57,16 +59,12 @@ class FigureController {
         var from = parsedInput.from;
         var to = parsedInput.to; 
 
-        var fromTile = this.#desk.get(from[0], from[1], from[2]);
-        var toTile = this.#desk.get(to[0], to[1], to[2]);
+        var fromTile = this.#desk.get(from.layer, from.x, from.z);
+        var toTile = this.#desk.get(to.layer, to.x, to.z);
         
+        MoveChecker.checkMove(from, to);
+
         var figureToMove = fromTile.figure;
-
-        if (figureToMove == null || toTile.figure != null) {
-
-            alert('Вы пытаетесь сделать недопустимый ход.')
-            return;
-        }
 
         fromTile.figure = null;
         toTile.figure = figureToMove;
@@ -84,8 +82,16 @@ class FigureController {
         }
 
         return {
-            from: input[0],
-            to: input[1]
+            from: {
+                layer: input[0][0],
+                x: input[0][1],
+                z: input[0][2]
+            },
+            to: {
+                layer: input[1][0],
+                x: input[1][1],
+                z: input[1][2]
+            }
         };
     }
 }
