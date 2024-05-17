@@ -5,6 +5,20 @@ class Tile extends GameObject {
     #color;
     #figure;
 
+    get figure() {
+        return this.#figure;
+    }
+    set figure(figure) {
+        if (figure == null) return;
+        this.#figure = figure;
+
+        this.#figure.setPosition(
+            this.position.x + (Tile.size.width - this.#figure.constructor.size.width)/2,
+            this.position.y + Tile.size.height,
+            this.position.z + (Tile.size.width - this.#figure.constructor.size.depth)/2
+        );
+    }
+
     get color() {
         return this.#color;
     }
