@@ -5,8 +5,8 @@ import {
 } from "../../shaders/shadersHelper.js";
 
 class Figure extends GameObject {
-    _color;
     #figureType;
+    _color;
     
     static size = {
         width: 50,
