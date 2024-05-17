@@ -13,12 +13,6 @@ class MoveChecker {
             startPosition.x, 
             startPosition.z
         ).figure;
-    
-        if (figure == null || figure == undefined) {
-            
-            alert('Вы указали пустую клетку для выбора фигуры.')
-            return null;
-        }
 
         return figure;
     }
@@ -31,12 +25,8 @@ class MoveChecker {
      */
     static checkMove(startPosition, endPosition) {
         var figure = this.#getFigure(startPosition);
-        if (figure == null) {
-
-            return false;
-        }
-
-        if (figure.type in checkFunc) {
+        
+        if (!!figure && figure.type in checkFunc) {
 
             var result = checkFunc[figure.type](startPosition, endPosition, figure);
         } else {

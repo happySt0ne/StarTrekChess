@@ -62,7 +62,13 @@ class FigureController {
         var fromTile = this.#desk.get(from.layer, from.x, from.z);
         var toTile = this.#desk.get(to.layer, to.x, to.z);
         
-        MoveChecker.checkMove(from, to);
+        var isValidMove = MoveChecker.checkMove(from, to);
+
+        if (!isValidMove) {
+            
+            alert('Данный ход недопустим.');
+            return;
+        }
 
         var figureToMove = fromTile.figure;
 
