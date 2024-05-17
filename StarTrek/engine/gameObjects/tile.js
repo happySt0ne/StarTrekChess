@@ -23,7 +23,7 @@ class Tile extends GameObject {
 
         this.#figure.setPosition(
             this.position.x + (Tile.size.width - this.#figure.constructor.size.width)/2,
-            this.position.y,
+            this.position.y + Tile.size.height,
             this.position.z + (Tile.size.width - this.#figure.constructor.size.depth)/2
         );
     }
