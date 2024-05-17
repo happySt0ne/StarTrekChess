@@ -1,5 +1,7 @@
-import { isFocusInInputElement } from '../supportStuff/usefullFunctions.js';
-import Desk from './gameObjects/desk.js';
+import { 
+    isFocusInInputElement,
+    containsOnlyDigits
+} from '../supportStuff/usefullFunctions.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -37,6 +39,21 @@ class FigureController {
 
     static #makeMove(input) {
         var parsedInput = this.#parseMoveInput(input);
+        if (!parsedInput) {
+            
+            alert(`
+                Введите корректные координаты.
+                Сначала вводятся координаты клетки с 
+                которой нужно сделать ход
+                затем координаты клетки, 
+                куда нужно передвинуть. Cначала 
+                вводится уровень доски (1-самая нижняя), 
+                затем x координата, после чего z.
+                Пример: 111 222`
+            );
+            return;
+        }
+
         var from = parsedInput.from;
         var to = parsedInput.to; 
 
@@ -45,16 +62,27 @@ class FigureController {
         
         var figureToMove = fromTile.figure;
 
+        if (figureToMove == null || toTile.figure != null) {
+
+            alert('Вы пытаетесь сделать недопустимый ход.')
+            return;
+        }
+
         fromTile.figure = null;
         toTile.figure = figureToMove;
-
-        //TODO: осталось сделать само передвижение. Для этого я думаю можно ебануть
-        // функцию в доске чтобы "убирать" фигуру с определённого тайла.
     }
 
     static #parseMoveInput(input) {
         input = input.trim().replace(/\s+/g, ' ').split(' ');
-        //TODO: добавь проверку на ввод.   
+
+        if (input == '' || input == null || input.length < 2 
+            || input[0].length < 3 || input[1].length < 3
+            || !containsOnlyDigits(input[0])
+            || !containsOnlyDigits(input[1])) {
+
+            return false;
+        }
+
         return {
             from: input[0],
             to: input[1]
