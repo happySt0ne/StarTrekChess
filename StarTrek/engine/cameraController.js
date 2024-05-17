@@ -1,8 +1,11 @@
 import Camera from "./camera.js";
+import { isFocusInInputElement } from '../supportStuff/usefullFunctions.js'
 
 class cameraController {
 
     static keyDownHandler(e) {
+        if (isFocusInInputElement('moveInput')) return;
+
         switch (e.keyCode) {
             case 39:
                 Camera.updatePosition(0, -1);                

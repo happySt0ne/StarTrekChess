@@ -9,6 +9,7 @@ import {
     setShaderPositionAttrib 
 } from './supportStuff/shaderAttributes.js';
 import Figure from './engine/gameObjects/figure.js';
+import { setupUiController } from './supportStuff/figureControllerUi.js'
 
 function main() { 
     var gl = document.querySelector("#canvas").getContext("webgl");
@@ -24,13 +25,15 @@ function main() {
 
     var positionLocation = gl.getAttribLocation(program, "a_position");
     var colorLocation = gl.getAttribLocation(program, "a_color");
-
+    
     var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-
+    
     var positionBuffer = gl.createBuffer();
     var colorBuffer = gl.createBuffer();
     
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    
+    setupUiController();
     
     cameraController.enableCameraController();
     
@@ -50,6 +53,7 @@ function main() {
     setInterval(drawScene, 30);
 
     function drawScene() {
+
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
