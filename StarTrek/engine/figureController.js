@@ -41,9 +41,12 @@ class FigureController {
         var to = parsedInput.to; 
 
         var fromTile = this.#desk.get(from[0], from[1], from[2]);
-        fromTile.color = '';
         var toTile = this.#desk.get(to[0], to[1], to[2]);
-        toTile.color = '';
+        
+        var figureToMove = fromTile.figure;
+
+        fromTile.figure = null;
+        toTile.figure = figureToMove;
 
         //TODO: осталось сделать само передвижение. Для этого я думаю можно ебануть
         // функцию в доске чтобы "убирать" фигуру с определённого тайла.

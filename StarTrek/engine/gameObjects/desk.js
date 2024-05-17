@@ -11,7 +11,7 @@ class Desk extends GameObject {
     #desks;
 
     get(layer, x, z) {
-        return this.#desks[layer][z][x];
+        return this.#desks[layer-1][z-1][x-1];
     }
 
     constructor(x, y, z, yGap) {
