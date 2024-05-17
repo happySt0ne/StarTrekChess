@@ -9,9 +9,14 @@ class Tile extends GameObject {
         return this.#figure;
     }
     set figure(figure) {
-        if (figure == null) return;
-        this.#figure = figure;
+        if (figure == null) {
+            
+            this.#figure = figure;
+            return;
+        }
 
+        this.#figure = figure;
+        
         this.#figure.setPosition(
             this.position.x + (Tile.size.width - this.#figure.constructor.size.width)/2,
             this.position.y + Tile.size.height,
