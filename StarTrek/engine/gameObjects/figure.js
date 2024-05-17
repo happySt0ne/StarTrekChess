@@ -1,17 +1,22 @@
-import GameObject from "../gameObject.js";
+import GameObject from "./gameObject.js";
 import { 
     setCuboidColorBlack, 
     setCuboidColorWhite 
-} from "../../../shaders/shadersHelper.js";
+} from "../../shaders/shadersHelper.js";
 
 class Figure extends GameObject {
     _color;
+    #figureType;
     
     static size = {
         width: 50,
         height: 50,
         depth: 50
     };
+
+    get figureType() {
+        return this.#figureType;
+    }
     
     constructor(x, y, z, color) {
         super(x, y, z);
