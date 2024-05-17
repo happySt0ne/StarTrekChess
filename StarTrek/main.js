@@ -8,6 +8,7 @@ import {
     setShaderColorAttrib, 
     setShaderPositionAttrib 
 } from './supportStuff/shaderAttributes.js';
+import Figure from './engine/gameObjects/figures/figure.js';
 
 function main() { 
     var gl = document.querySelector("#canvas").getContext("webgl");
@@ -35,14 +36,17 @@ function main() {
     
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
+    
+    var c = new Figure(0, 0, -500, 'asd');
 
     var gameObjects = [
         new Desk(-300, 200, -500, 200),
-        new GameObject(0, 0, 0)
+        c
     ];
 
-    var a = gameObjects[0].get(1, 3, 2);    
-    a.color = '';
+    var a = gameObjects[0].get(1, 2, 1);    
+    a.setFigure(c);
+
     setInterval(drawScene, 30);
 
     function drawScene() {
