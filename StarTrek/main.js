@@ -41,7 +41,7 @@ function main() {
     GameObject.setBuffers(positionBuffer, colorBuffer);
     GameObject.setMatrixLocation(matrixLocation);
     
-    var c = new Figure(0, 0, -500, 'white', figureTypes.Pawn);
+    var c = new Figure(0, 0, -500, 'black', figureTypes.Pawn);
     var c2 = new Figure(0, 0, 0, 'white');
 
     var desk = new Desk(-300, 200, -500, 200);
@@ -53,8 +53,8 @@ function main() {
         c, c2
     ];
 
-    gameObjects[0].get(1, 4, 3).setFigure(c);
-    gameObjects[0].get(1, 3, 3).setFigure(c2);
+    gameObjects[0].get(1, 1, 3).setFigure(c);
+    gameObjects[0].get(1, 4, 2).setFigure(c2);
 
     setInterval(drawScene, 30);
 

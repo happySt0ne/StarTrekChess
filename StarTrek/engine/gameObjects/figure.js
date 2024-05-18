@@ -7,7 +7,12 @@ import {
 class Figure extends GameObject {
     #figureType;
     _color;
-    
+    #moveCount = -1;
+
+    get moveCount() {
+        return this.#moveCount;
+    }
+
     static size = {
         width: 50,
         height: 50,
@@ -40,6 +45,8 @@ class Figure extends GameObject {
     }
 
     setPosition(x, y, z) {
+        this.#moveCount++;
+
         this.position = {
             x: x,
             y: y,

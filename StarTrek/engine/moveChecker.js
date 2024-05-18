@@ -7,11 +7,11 @@ class MoveChecker {
         this.#desk = desk;
     }
 
-    static #getFigure(startPosition) {
+    static #getFigure(position) {
         var figure = this.#desk.get(
-            startPosition.layer, 
-            startPosition.x, 
-            startPosition.z
+            position.layer, 
+            position.x, 
+            position.z
         ).figure;
 
         return figure;
@@ -25,10 +25,10 @@ class MoveChecker {
      */
     static checkMove(startPosition, endPosition) {
         var figure = this.#getFigure(startPosition);
-        
-        if (!!figure && figure.type in checkFunc) {
 
-            var result = checkFunc[figure.type](startPosition, endPosition, figure);
+        if (!!figure && figure.type in this.#checkFunc) {
+
+            var result = this.#checkFunc[figure.type](startPosition, endPosition);
         } else {
             alert('Фигура неизвестного типа.');
             return false;
@@ -37,48 +37,113 @@ class MoveChecker {
         console.log(result);
         return result;
     }
-}
 
-const checkFunc = {
-    [figureTypes.Pawn]: (startPosition, endPosition, figure) => 
-        checkPawn(startPosition, endPosition, figure),
+    static #checkXEnableMoves(startPosition, range, direction) {
+        var enableMoves = [];
 
-    [figureTypes.Bishop]: (startPosition, endPosition, figure) => 
-        checkBishop(startPosition, endPosition, figure),
+        for (var i = 1; i <= range; ++i) {
+            var xToCheck = parseInt(startPosition.x) + i*direction;
 
-    [figureTypes.King]: (startPosition, endPosition, figure) => 
-        checkKing(startPosition, endPosition, figure),
 
-    [figureTypes.Queen]: (startPosition, endPosition, figure) => 
-        checkQueen(startPosition, endPosition, figure),
+            var tile = 
+                this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
 
-    [figureTypes.Knight]: (startPosition, endPosition, figure) => 
-        checkKnight(startPosition, endPosition, figure),
+            if (tile != null && tile.figure == null) { 
 
-    [figureTypes.Rook]: (startPosition, endPosition, figure) => 
-        checkRook(startPosition, endPosition, figure)
-}
+                enableMoves.push(tile);
+            } else {
+                return enableMoves;
+            }
+        }
 
-function checkPawn(startPosition, endPosition, figure) {
-    return 'pizdec2321';
-}
+        return enableMoves;
+    }
 
-function checkBishop(startPosition, endPosition, figure) {
+    static #checkDiagEnableMoves(startPosition, range, directionX, directionZ) {
+        var enableMoves = [];
+
+        for (var i = 1; i <= range; ++i) {
+            
+            var xToCheck = parseInt(startPosition.x) + i*directionX;
+
+            for (var j = 1; j <= range; ++j) {
+
+                var zToCheck = parseInt(startPosition.z) + i*directionZ;
+                var tile = 
+                    this.#desk.get(startPosition.layer, xToCheck, zToCheck);
+                
+                if (tile != null && tile.figure == null) {
+
+                    enableMoves.push(tile);
+                }
+            }
+        }
+
+        return enableMoves;
+    }
+
+    static #checkPawn(startPosition, endPosition) {
+        var startFigure = this.#getFigure(startPosition);
+        var moveDirection = (startFigure.color == 'white') ? -1 : 1;
+        var enableMoves = [];
+
+        if (startFigure.moveCount == 0) {
+
+            enableMoves = 
+                enableMoves.concat(this.#checkXEnableMoves(startPosition, 2, moveDirection));
+        } else {
+            enableMoves = 
+                enableMoves.concat(this.#checkXEnableMoves(startPosition, 1, moveDirection));
+        }
+
+        enableMoves =
+            enableMoves.concat(this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1));
+        enableMoves =
+            enableMoves.concat(this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1));
+
+        for (var i = 0; i < enableMoves.length; ++i) {
+
+            enableMoves[i].color = '';
+        }
+
+        return true;
+    }
     
-}
-function checkKing(startPosition, endPosition, figure) {
+    static #checkBishop(startPosition, endPosition) {
+        
+    }
+    static #checkKing(startPosition, endPosition) {
+        
+    }
+    static #checkQueen(startPosition, endPosition) {
+        
+    }
+    static #checkKnight(startPosition, endPosition) {
+        
+    }
+    static #checkRook(startPosition, endPosition) {
+        
+    }
     
-}
-function checkQueen(startPosition, endPosition, figure) {
+    static #checkFunc = {
+        [figureTypes.Pawn]: (startPosition, endPosition) => 
+            this.#checkPawn(startPosition, endPosition),
     
-}
-function checkKnight(startPosition, endPosition, figure) {
+        [figureTypes.Bishop]: (startPosition, endPosition) => 
+            this.#checkBishop(startPosition, endPosition),
     
-}
-function checkRook(startPosition, endPosition, figure) {
+        [figureTypes.King]: (startPosition, endPosition) => 
+            this.#checkKing(startPosition, endPosition),
     
+        [figureTypes.Queen]: (startPosition, endPosition) => 
+            this.#checkQueen(startPosition, endPosition),
+    
+        [figureTypes.Knight]: (startPosition, endPosition) => 
+            this.#checkKnight(startPosition, endPosition),
+    
+        [figureTypes.Rook]: (startPosition, endPosition) => 
+            this.#checkRook(startPosition, endPosition)
+    }
 }
-
-
 
 export default MoveChecker;
