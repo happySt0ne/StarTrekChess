@@ -34,7 +34,6 @@ class MoveChecker {
             return false;
         }
 
-        console.log(result);
         return result;
     }
 
@@ -113,28 +112,31 @@ class MoveChecker {
         var enableMoves = [];
 
         if (startFigure.moveCount == 0) {
-            var moveInfoX = this.#checkXEnableMoves(startPosition, 2, moveDirection);
-            
+
+            var moveXInfo = this.#checkXEnableMoves(startPosition, 2, moveDirection);
         } else {
-            var moveInfoX = this.#checkXEnableMoves(startPosition, 2, moveDirection);
+            var moveXInfo = this.#checkXEnableMoves(startPosition, 1, moveDirection);
         }
 
-        enableMoves = enableMoves.concat(moveInfoX.enableMoves);
+        enableMoves = enableMoves.concat(moveXInfo.enableMoves);
         
-        var moveInfoDiag = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
-        enableMoves = enableMoves.concat(moveInfoDiag.enableMoves);
-        console.log(moveInfoDiag.moveToKill);
-
-        moveInfoDiag = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
-        enableMoves = enableMoves.concat(moveInfoDiag.enableMoves);
-        console.log(moveInfoDiag.moveToKill);
-
-        for (var i = 0; i < enableMoves.length; ++i) {
-
-            enableMoves[i].color = '';
+        var moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
+        if (moveDiagInfo.moveToKill != null) {
+            enableMoves.push(moveDiagInfo.moveToKill);
         }
 
-        return true;
+        moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
+        if (moveDiagInfo.moveToKill != null) {
+            enableMoves.push(moveDiagInfo.moveToKill);
+        }
+
+        var endTile = this.#desk.get(endPosition);
+
+        if (enableMoves.includes(endTile)) {
+            return true;
+        } 
+
+        return false;
     }
     
     static #checkBishop(startPosition, endPosition) {
