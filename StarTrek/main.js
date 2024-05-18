@@ -54,7 +54,7 @@ function main() {
     ];
 
     gameObjects[0].get(1, 1, 3).setFigure(c);
-    gameObjects[0].get(1, 4, 2).setFigure(c2);
+    gameObjects[0].get(1, 2, 2).setFigure(c2);
 
     setInterval(drawScene, 30);
 

@@ -48,15 +48,29 @@ class MoveChecker {
             var tile = 
                 this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
 
-            if (tile != null && tile.figure == null) { 
+            if (tile == null) {
 
-                enableMoves.push(tile);
-            } else {
-                return enableMoves;
+                return {
+                    enableMoves: enableMoves,
+                    moveToKill: null
+                };
             }
+
+            if (tile.figure != null) {
+
+                return {
+                    enableMoves: enableMoves,
+                    moveToKill: tile
+                };
+            }
+
+            enableMoves.push(tile);
         }
 
-        return enableMoves;
+        return {
+            enableMoves: enableMoves,
+            moveToKill: null
+        };
     }
 
     static #checkDiagEnableMoves(startPosition, range, directionX, directionZ) {
@@ -65,21 +79,32 @@ class MoveChecker {
         for (var i = 1; i <= range; ++i) {
             
             var xToCheck = parseInt(startPosition.x) + i*directionX;
+            var zToCheck = parseInt(startPosition.z) + i*directionZ;
 
-            for (var j = 1; j <= range; ++j) {
-
-                var zToCheck = parseInt(startPosition.z) + i*directionZ;
-                var tile = 
-                    this.#desk.get(startPosition.layer, xToCheck, zToCheck);
-                
-                if (tile != null && tile.figure == null) {
-
-                    enableMoves.push(tile);
-                }
+            var tile = 
+                this.#desk.get(startPosition.layer, xToCheck, zToCheck);
+            
+            if (tile == null) {
+                return {
+                    enableMoves: enableMoves,
+                    moveToKill: null
+                };
             }
+
+            if (tile.figure != null) {
+                return {
+                    enableMoves: enableMoves,
+                    moveToKill: tile
+                };
+            }
+
+            enableMoves.push(tile);
         }
 
-        return enableMoves;
+        return {
+            enableMoves: enableMoves,
+            moveToKill: null
+        };
     }
 
     static #checkPawn(startPosition, endPosition) {
@@ -88,18 +113,21 @@ class MoveChecker {
         var enableMoves = [];
 
         if (startFigure.moveCount == 0) {
-
-            enableMoves = 
-                enableMoves.concat(this.#checkXEnableMoves(startPosition, 2, moveDirection));
+            var moveInfoX = this.#checkXEnableMoves(startPosition, 2, moveDirection);
+            
         } else {
-            enableMoves = 
-                enableMoves.concat(this.#checkXEnableMoves(startPosition, 1, moveDirection));
+            var moveInfoX = this.#checkXEnableMoves(startPosition, 2, moveDirection);
         }
 
-        enableMoves =
-            enableMoves.concat(this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1));
-        enableMoves =
-            enableMoves.concat(this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1));
+        enableMoves = enableMoves.concat(moveInfoX.enableMoves);
+        
+        var moveInfoDiag = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
+        enableMoves = enableMoves.concat(moveInfoDiag.enableMoves);
+        console.log(moveInfoDiag.moveToKill);
+
+        moveInfoDiag = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
+        enableMoves = enableMoves.concat(moveInfoDiag.enableMoves);
+        console.log(moveInfoDiag.moveToKill);
 
         for (var i = 0; i < enableMoves.length; ++i) {
 
