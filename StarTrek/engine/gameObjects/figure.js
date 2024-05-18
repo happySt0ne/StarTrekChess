@@ -8,6 +8,7 @@ class Figure extends GameObject {
     #figureType;
     _color;
     #moveCount = -1;
+    #isAlive = true;
 
     get moveCount() {
         return this.#moveCount;
@@ -52,6 +53,16 @@ class Figure extends GameObject {
             y: y,
             z: z
         };
+    }
+
+    die() {
+        this.#isAlive = false;
+        this.setPosition(0, 0, 500);
+    }
+
+    draw() {
+        if (!this.#isAlive) return;
+        super.draw();
     }
 }
 
