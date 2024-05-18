@@ -14,6 +14,10 @@ class Figure extends GameObject {
         depth: 50
     };
 
+    get color() {
+        return this._color;
+    }
+
     get type() {
         return this.#figureType;
     }
