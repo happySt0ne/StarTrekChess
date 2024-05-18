@@ -10,7 +10,19 @@ const constants = {
 class Desk extends GameObject {
     #desks;
 
-    get(layer, x, z) {
+    get () {
+        if (arguments.length === 3) {
+            return this.#getByPoints(arguments[0], arguments[1], arguments[2]);
+        } else {
+            return this.#getByPosition(arguments[0]);
+        }
+    }
+
+    #getByPosition (position) {
+        return this.#getByPoints(position.layer, position.x, position.z);
+    }
+
+    #getByPoints(layer, x, z) {
         if (layer > constants.layersCount ||
             x > constants.deskWidthTiles ||
             z > constants.deskLengthTiles ||
@@ -20,7 +32,7 @@ class Desk extends GameObject {
         ) {
             return null;
         }
-
+        
         return this.#desks[layer-1][z-1][x-1];
     }
 
