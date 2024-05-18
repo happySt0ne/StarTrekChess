@@ -11,6 +11,16 @@ class Desk extends GameObject {
     #desks;
 
     get(layer, x, z) {
+        if (layer > constants.layersCount ||
+            x > constants.deskWidthTiles ||
+            z > constants.deskLengthTiles ||
+            layer < 1 ||
+            x < 1 || 
+            z < 1 
+        ) {
+            return null;
+        }
+
         return this.#desks[layer-1][z-1][x-1];
     }
 
