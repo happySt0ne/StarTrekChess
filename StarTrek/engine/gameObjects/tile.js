@@ -15,6 +15,10 @@ class Tile extends GameObject {
             return;
         }
 
+        if (this.#figure != null) {
+            this.#figure.die();
+        }
+
         this.#figure = figure;
         
         this.#figure.setPosition(
@@ -38,6 +42,10 @@ class Tile extends GameObject {
     };
 
     setFigure(figure) {
+        if (this.#figure != null) {
+            this.#figure.die();
+        }
+
         this.#figure = figure;
 
         this.#figure.setPosition(
