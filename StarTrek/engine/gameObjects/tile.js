@@ -4,6 +4,11 @@ import GameObject from './gameObject.js';
 class Tile extends GameObject {    
     #color;
     #figure;
+    #isDouble;
+
+    get isDouble() {
+        return this.#isDouble;
+    }
 
     get figure() {
         return this.#figure;
@@ -65,9 +70,10 @@ class Tile extends GameObject {
         }
     }
 
-    constructor(x, y, z, color) { 
+    constructor(x, y, z, color, isDouble) { 
         super(x, y, z);
         this.#color = color;
+        this.#isDouble = isDouble;
     }
 }
 
