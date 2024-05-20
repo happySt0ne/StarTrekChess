@@ -38,49 +38,51 @@ class MoveChecker {
     }
 
     static #isTileNull(tile, outRes) {
+        if (tile == null) {
 
+        }
     }
 
-    // static #checkXUpperLevelMoves(startPos, range, direction) {
-    //     if (startPos.x > 2) {
-    //         for (let i = 1; i <= range; ++i) {
+    static #checkUpperLayerMoves(startPosition, range, direction) {
+        let newLayer = parseInt(startPosition.layer) + 1;
+        let newXPos = parseInt(startPosition.x) + 2;
+        console.log(newXPos);  
+        let newRange = range ;//- (parseInt(startPosition.x) + 2 - newXPos);
 
-    //             var tile = 
-    //         }
-    //     }
-    // }
+        let newStartPos = {
+            layer: newLayer,
+            x: newXPos,
+            z: startPosition.z
+        };
+
+        return this.#checkXEnableMoves(newStartPos, newRange, direction);
+    }
 
     static #checkXEnableMoves(startPosition, range, direction) {
         var enableMoves = [];
+        console.log("pizda " + startPosition.layer + " " + startPosition.x + " " + startPosition.z);
+        // if (startPosition.layer > 2) {
+        //     return {
+        //         enableMoves: enableMoves,
+        //         moveToKill: null
+        //     };
+        // }
 
-        for (var i = 1; i <= range; ++i) {
+        for (var i = 0; i <= range - 1; ++i) {
             var xToCheck = parseInt(startPosition.x) + i*direction;
-
+            
             var tile = 
                 this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
 
-            if (tile == null) {
+            var tile2 = 
+                this.#desk.get(startPosition.layer, startPosition.x, startPosition.z);
 
+            if (tile == null || tile2 == null) {
+                console.log("hui " + enableMoves.length);
                 return {
                     enableMoves: enableMoves,
                     moveToKill: null
                 };
-            }
-
-            if (tile.isDouble && startPosition.layer == 1) {
-
-                let newXPos = parseInt(startPosition.x) + 2;
-                newXPos = newXPos - newXPos%5;
-                let newRange = range - (parseInt(startPosition.x) + 2 - newXPos);
-                                
-                let newStartPos = {
-                    layer: 2,
-                    x: newXPos,
-                    z: startPosition.z
-                };
-
-                var upperMoveInfo = this.#checkXEnableMoves(newStartPos, newRange, direction);
-                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
             }
 
             if (tile.figure != null) {
@@ -89,6 +91,16 @@ class MoveChecker {
                     enableMoves: enableMoves,
                     moveToKill: tile
                 };
+            }
+
+            if (tile.isDouble && (startPosition.layer == 1 || startPosition.layer == 2) && xToCheck < 3) {
+                let positionToCheck = {
+                    layer: startPosition.layer,
+                    x: xToCheck,
+                    z: startPosition.z
+                };
+                let upperMoveInfo = this.#checkUpperLayerMoves(positionToCheck, range - i, direction);
+                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
             }
 
             enableMoves.push(tile);
@@ -138,12 +150,18 @@ class MoveChecker {
         var startFigure = this.#getFigure(startPosition);
         var moveDirection = (startFigure.color == 'white') ? -1 : 1;
         var enableMoves = [];
+        
+        let positionToCheck = {
+            layer: startPosition.layer,
+            x: parseInt(startPosition.x) + moveDirection,
+            z: startPosition.z
+        };
 
         if (startFigure.moveCount == 0) {
 
-            var moveXInfo = this.#checkXEnableMoves(startPosition, 2, moveDirection);
+            var moveXInfo = this.#checkXEnableMoves(positionToCheck, 3, moveDirection);
         } else {
-            var moveXInfo = this.#checkXEnableMoves(startPosition, 1, moveDirection);
+            var moveXInfo = this.#checkXEnableMoves(positionToCheck , 1, moveDirection);
         }
 
         enableMoves = enableMoves.concat(moveXInfo.enableMoves);
