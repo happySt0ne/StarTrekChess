@@ -37,15 +37,41 @@ class MoveChecker {
         return result;
     }
 
-    static #isTileNull(tile, outRes) {
-        if (tile == null) {
+    static moves = [];
+    
+    static #rec(position, range, direction) {
+        if (range == 0) return;
+        if (this.#desk.get(position) == null) return;
+        if (this.#desk.get(position).figure != null) return;
 
-        }
+        this.moves.push(this.#desk.get(position));
+
+        var pos1 = {
+            layer: parseInt(position.layer),
+            x: parseInt(position.x) + direction,
+            z: position.z
+        };
+
+        var pos2 = {
+            layer: parseInt(position.layer) + 1,
+            x: parseInt(position.x) + direction + 2,
+            z: position.z
+        };
+
+        var pos3 = {
+            layer: parseInt(position.layer) + 2,
+            x: parseInt(position.x) + direction + 4,
+            z: position.z
+        };
+
+        this.#rec(pos1, range - 1, direction);
+        this.#rec(pos2, range - 1, direction);
+        this.#rec(pos3, range - 1, direction);
     }
 
     static #checkUpperLayerMoves(startPosition, range, direction) {
         let newLayer = parseInt(startPosition.layer) + 1;
-        let newXPos = parseInt(startPosition.x) + 2;
+        let newXPos = parseInt(startPosition.x) + 1;
         console.log(newXPos);  
         let newRange = range ;//- (parseInt(startPosition.x) + 2 - newXPos);
 
@@ -74,10 +100,23 @@ class MoveChecker {
             var tile = 
                 this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
 
+            // var tile2 = 
+            //     this.#desk.get(startPosition.layer, startPosition.x, startPosition.z);
             var tile2 = 
-                this.#desk.get(startPosition.layer, startPosition.x, startPosition.z);
+                this.#desk.get(parseInt(startPosition.layer) + 1, xToCheck + 1, startPosition.z);
 
-            if (tile == null || tile2 == null) {
+            if (tile2 != null)
+            if (tile2.isDouble && ! tile2.figure && (startPosition.layer == 1 || startPosition.layer == 2) && xToCheck < 3) {
+                let positionToCheck = {
+                    layer: startPosition.layer,
+                    x: xToCheck,
+                    z: startPosition.z
+                };
+                let upperMoveInfo = this.#checkUpperLayerMoves(positionToCheck, range - i, direction);
+                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
+            }
+
+            if (tile == null /* || tile2 == null*/) {
                 console.log("hui " + enableMoves.length);
                 return {
                     enableMoves: enableMoves,
@@ -91,16 +130,6 @@ class MoveChecker {
                     enableMoves: enableMoves,
                     moveToKill: tile
                 };
-            }
-
-            if (tile.isDouble && (startPosition.layer == 1 || startPosition.layer == 2) && xToCheck < 3) {
-                let positionToCheck = {
-                    layer: startPosition.layer,
-                    x: xToCheck,
-                    z: startPosition.z
-                };
-                let upperMoveInfo = this.#checkUpperLayerMoves(positionToCheck, range - i, direction);
-                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
             }
 
             enableMoves.push(tile);
@@ -146,46 +175,80 @@ class MoveChecker {
         };
     }
 
-    static #checkPawn(startPosition, endPosition) { 
-        var startFigure = this.#getFigure(startPosition);
-        var moveDirection = (startFigure.color == 'white') ? -1 : 1;
-        var enableMoves = [];
+    static #colorise() {
+        this.moves.forEach(e => e.color = '');
+    }
+
+    static #checkPawn (startPosition, endPosition) {
+        var direction = -1;
         
-        let positionToCheck = {
-            layer: startPosition.layer,
-            x: parseInt(startPosition.x) + moveDirection,
+        var pos1 = {
+            layer: parseInt(startPosition.layer),
+            x: parseInt(startPosition.x) + direction,
             z: startPosition.z
         };
 
-        if (startFigure.moveCount == 0) {
+        var pos2 = {
+            layer: parseInt(startPosition.layer) + 1,
+            x: parseInt(startPosition.x) + direction + 2,
+            z: startPosition.z
+        };
 
-            var moveXInfo = this.#checkXEnableMoves(positionToCheck, 3, moveDirection);
-        } else {
-            var moveXInfo = this.#checkXEnableMoves(positionToCheck , 1, moveDirection);
-        }
+        var pos3 = {
+            layer: parseInt(startPosition.layer) + 2,
+            x: parseInt(startPosition.x) + direction + 4,
+            z: startPosition.z
+        };
 
-        enableMoves = enableMoves.concat(moveXInfo.enableMoves);
-        
-        var moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
-        if (moveDiagInfo.moveToKill != null) {
-            enableMoves.push(moveDiagInfo.moveToKill);
-        }
+        var range = 2;
 
-        moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
-        if (moveDiagInfo.moveToKill != null) {
-            enableMoves.push(moveDiagInfo.moveToKill);
-        }
-
-        enableMoves.forEach(x => x.color = '');
-
-        var endTile = this.#desk.get(endPosition);
-
-        if (enableMoves.includes(endTile)) {
-            return true;
-        } 
-
-        return false;
+        this.#rec(pos1, range, -1);
+        this.#rec(pos2, range, -1);
+        this.#rec(pos3, range, -1);
+        console.log(this.moves);
+        this.#colorise();
     }
+
+    // static #checkPawn(startPosition, endPosition) { 
+    //     var startFigure = this.#getFigure(startPosition);
+    //     var moveDirection = (startFigure.color == 'white') ? -1 : 1;
+    //     var enableMoves = [];
+        
+    //     let positionToCheck = {
+    //         layer: startPosition.layer,
+    //         x: parseInt(startPosition.x) + moveDirection,
+    //         z: startPosition.z
+    //     };
+
+    //     if (startFigure.moveCount == 0) {
+
+    //         var moveXInfo = this.#checkXEnableMoves(positionToCheck, 3, moveDirection);
+    //     } else {
+    //         var moveXInfo = this.#checkXEnableMoves(positionToCheck , 1, moveDirection);
+    //     }
+
+    //     enableMoves = enableMoves.concat(moveXInfo.enableMoves);
+        
+    //     var moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
+    //     if (moveDiagInfo.moveToKill != null) {
+    //         enableMoves.push(moveDiagInfo.moveToKill);
+    //     }
+
+    //     moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
+    //     if (moveDiagInfo.moveToKill != null) {
+    //         enableMoves.push(moveDiagInfo.moveToKill);
+    //     }
+
+    //     enableMoves.forEach(x => x.color = '');
+
+    //     var endTile = this.#desk.get(endPosition);
+
+    //     if (enableMoves.includes(endTile)) {
+    //         return true;
+    //     } 
+
+    //     return false;
+    // }
     
     static #checkBishop(startPosition, endPosition) {
         
