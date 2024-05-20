@@ -7,6 +7,10 @@ const constants = {
     deskLengthTiles: 4
 };
 
+const topLayerPredicate = element => element > 1;
+const middleLayerPredicate = element => true;
+const lowerLayerPredicate = element => element < 2;
+
 class Desk extends GameObject {
     #desks;
 
@@ -40,9 +44,9 @@ class Desk extends GameObject {
         super(x, y, z);
 
         this.#desks = []
-        this.#desks.push(this.#createLayer(x + Tile.size.width*4, y - 2*yGap, z));
-        this.#desks.push(this.#createLayer(x + Tile.size.width*2, y - yGap, z));
-        this.#desks.push(this.#createLayer(x, y, z));
+        this.#desks.push(this.#createLayer(x + 4*Tile.size.width, y - 2*yGap, z, lowerLayerPredicate));
+        this.#desks.push(this.#createLayer(x + 2*Tile.size.width, y - yGap, z, middleLayerPredicate));
+        this.#desks.push(this.#createLayer(x, y, z, topLayerPredicate));
     }
 
     draw() {
@@ -58,19 +62,21 @@ class Desk extends GameObject {
         }
     }
 
-    #createLayer(x, y, z) {
+    #createLayer(x, y, z, predicate) {
         var desk = [];
     
         for (var i = 0; i < constants.deskLengthTiles; ++i) {
             
             var row = [];
             for (var j = 0; j < constants.deskWidthTiles; ++j) {
-    
+                
+                var xPos = x + j*Tile.size.width;
+                var zPos = z + i*Tile.size.depth;
                 row.push(
                     new Tile(
-                        x + j*Tile.size.width, 
-                        y, 
-                        z + i*Tile.size.depth, (j+i)%2 == 0 ? 'white' : 'black'
+                        xPos, y, zPos, 
+                        (j+i)%2 === 0 ? 'white' : 'black',
+                        predicate(j)
                     )
                 );
             }
