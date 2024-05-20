@@ -37,12 +37,24 @@ class MoveChecker {
         return result;
     }
 
+    static #isTileNull(tile, outRes) {
+
+    }
+
+    // static #checkXUpperLevelMoves(startPos, range, direction) {
+    //     if (startPos.x > 2) {
+    //         for (let i = 1; i <= range; ++i) {
+
+    //             var tile = 
+    //         }
+    //     }
+    // }
+
     static #checkXEnableMoves(startPosition, range, direction) {
         var enableMoves = [];
 
         for (var i = 1; i <= range; ++i) {
             var xToCheck = parseInt(startPosition.x) + i*direction;
-
 
             var tile = 
                 this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
@@ -53,6 +65,22 @@ class MoveChecker {
                     enableMoves: enableMoves,
                     moveToKill: null
                 };
+            }
+
+            if (tile.isDouble && startPosition.layer == 1) {
+
+                let newXPos = parseInt(startPosition.x) + 2;
+                newXPos = newXPos - newXPos%5;
+                let newRange = range - (parseInt(startPosition.x) + 2 - newXPos);
+                                
+                let newStartPos = {
+                    layer: 2,
+                    x: newXPos,
+                    z: startPosition.z
+                };
+
+                var upperMoveInfo = this.#checkXEnableMoves(newStartPos, newRange, direction);
+                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
             }
 
             if (tile.figure != null) {
@@ -106,7 +134,7 @@ class MoveChecker {
         };
     }
 
-    static #checkPawn(startPosition, endPosition) {
+    static #checkPawn(startPosition, endPosition) { 
         var startFigure = this.#getFigure(startPosition);
         var moveDirection = (startFigure.color == 'white') ? -1 : 1;
         var enableMoves = [];
@@ -129,6 +157,8 @@ class MoveChecker {
         if (moveDiagInfo.moveToKill != null) {
             enableMoves.push(moveDiagInfo.moveToKill);
         }
+
+        enableMoves.forEach(x => x.color = '');
 
         var endTile = this.#desk.get(endPosition);
 
