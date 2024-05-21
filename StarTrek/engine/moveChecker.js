@@ -41,7 +41,7 @@ class MoveChecker {
     static #moves = [];
     static #movesToKill = [];
     
-    static #rec(position, range, direction) {
+    static #rec(position, range, directionX, directionY) {
         if (range == 0) return;
         if (this.#desk.get(position) == null) return;
         if (this.#desk.get(position).figure != null) {
@@ -53,19 +53,19 @@ class MoveChecker {
         this.#moves.push(this.#desk.get(position));
 
         var pos1 = new ChessPosition(position);
-        pos1.x += direction;
+        pos1.x += directionX;
 
         var pos2 = new ChessPosition(position);
-        pos2.layer += 1;
-        pos2.x += direction + 2;
+        pos2.layer += directionY * 1;
+        pos2.x += directionX + 2*(-directionX);
 
         var pos3 = new ChessPosition(position);
-        pos3.layer += 2;
-        pos3.x += direction + 4;
+        pos3.layer += directionY * 2;
+        pos3.x += directionX + 4*(-directionX);
 
-        this.#rec(pos1, range - 1, direction);
-        this.#rec(pos2, range - 1, direction);
-        this.#rec(pos3, range - 1, direction);
+        this.#rec(pos1, range - 1, directionX, directionY);
+        this.#rec(pos2, range - 1, directionX, directionY);
+        this.#rec(pos3, range - 1, directionX, directionY);
     }
 
     static #checkDiagEnableMoves(startPosition, range, directionX, directionZ) {
@@ -107,25 +107,25 @@ class MoveChecker {
     }
 
     static #checkPawn (startPosition, endPosition) {
-        var direction = -1;
-        
+        var directionX = 1;
+        var directionY = -1;
+
         var pos1 = new ChessPosition(startPosition);
-        pos1.x += direction;
+        pos1.x += directionX;
         
         var pos2 = new ChessPosition(startPosition);
-        pos2.layer += + 1;
-        pos2.x += direction + 2;
+        pos2.layer += 1*directionY;
+        pos2.x += directionX + 2*(-directionX);
 
         var pos3 = new ChessPosition(startPosition);
-        pos3.layer += 2;
-        pos3.x += direction + 4;
+        pos3.layer += 2*directionY;
+        pos3.x += directionX + 4*(-directionX);
 
         var range = Infinity;
 
-        this.#rec(pos1, range, -1);
-        this.#rec(pos2, range, -1);
-        this.#rec(pos3, range, -1);
-        console.log(this.#movesToKill);
+        this.#rec(pos1, range, directionX, directionY);
+        this.#rec(pos2, range, directionX, directionY);
+        this.#rec(pos3, range, directionX, directionY);
 
         this.#colorise(this.#moves);
         this.#colorise(this.#movesToKill);
