@@ -41,7 +41,7 @@ class MoveChecker {
     static #moves = [];
     static #movesToKill = [];
     
-    static #rec(position, range, directionX, directionY) {
+    static #rec(position, range, directionX, directionY, directionZ) {
         if (range == 0) return;
         if (this.#desk.get(position) == null) return;
         if (this.#desk.get(position).figure != null) {
@@ -54,78 +54,86 @@ class MoveChecker {
 
         var pos1 = new ChessPosition(position);
         pos1.x += directionX;
+        pos1.z += directionZ;
 
         var pos2 = new ChessPosition(position);
         pos2.layer += directionY * 1;
         pos2.x += directionX + 2*(-directionX);
+        pos2.z += directionZ;
 
         var pos3 = new ChessPosition(position);
         pos3.layer += directionY * 2;
         pos3.x += directionX + 4*(-directionX);
+        pos3.z += directionZ;
 
-        this.#rec(pos1, range - 1, directionX, directionY);
-        this.#rec(pos2, range - 1, directionX, directionY);
-        this.#rec(pos3, range - 1, directionX, directionY);
-    }
-
-    static #checkDiagEnableMoves(startPosition, range, directionX, directionZ) {
-        var enableMoves = [];
-
-        for (var i = 1; i <= range; ++i) {
-            
-            var xToCheck = parseInt(startPosition.x) + i*directionX;
-            var zToCheck = parseInt(startPosition.z) + i*directionZ;
-
-            var tile = 
-                this.#desk.get(startPosition.layer, xToCheck, zToCheck);
-            
-            if (tile == null) {
-                return {
-                    enableMoves: enableMoves,
-                    moveToKill: null
-                };
-            }
-
-            if (tile.figure != null) {
-                return {
-                    enableMoves: enableMoves,
-                    moveToKill: tile
-                };
-            }
-
-            enableMoves.push(tile);
-        }
-
-        return {
-            enableMoves: enableMoves,
-            moveToKill: null
-        };
+        this.#rec(pos1, range - 1, directionX, directionY, directionZ);
+        this.#rec(pos2, range - 1, directionX, directionY, directionZ);
+        this.#rec(pos3, range - 1, directionX, directionY, directionZ);
     }
 
     static #colorise(tiles) {
         tiles.forEach(e => e.color = '');
     }
 
-    static #checkPawn (startPosition, endPosition) {
-        var directionX = 1;
-        var directionY = -1;
+    static #clearMoveBuffers() {
+        this.#moves = [];
+        this.#movesToKill = [];
+    }
 
+    static #check(startPosition, range, directionX, directionY, directionZ) {
         var pos1 = new ChessPosition(startPosition);
         pos1.x += directionX;
-        
+        pos1.z += directionZ;
+
         var pos2 = new ChessPosition(startPosition);
         pos2.layer += 1*directionY;
         pos2.x += directionX + 2*(-directionX);
+        pos2.z += directionZ;
 
         var pos3 = new ChessPosition(startPosition);
         pos3.layer += 2*directionY;
         pos3.x += directionX + 4*(-directionX);
+        pos3.z += directionZ;
 
-        var range = Infinity;
+        this.#rec(pos1, range, directionX, directionY, directionZ);
+        this.#rec(pos2, range, directionX, directionY, directionZ);
+        this.#rec(pos3, range, directionX, directionY, directionZ);
+    }
 
-        this.#rec(pos1, range, directionX, directionY);
-        this.#rec(pos2, range, directionX, directionY);
-        this.#rec(pos3, range, directionX, directionY);
+    static #checkPawn (startPosition, endPosition) {
+        // var directionX = -1;
+        // var directionY = 1;
+        // var directionZ = -1;
+
+        // var pos1 = new ChessPosition(startPosition);
+        // pos1.x += directionX;
+        // pos1.z += directionZ;
+
+        // var pos2 = new ChessPosition(startPosition);
+        // pos2.layer += 1*directionY;
+        // pos2.x += directionX + 2*(-directionX);
+        // pos2.z += directionZ;
+
+        // var pos3 = new ChessPosition(startPosition);
+        // pos3.layer += 2*directionY;
+        // pos3.x += directionX + 4*(-directionX);
+        // pos3.z += directionZ;
+
+        // var range = Infinity;
+
+        // this.#rec(pos1, range, directionX, directionY, directionZ);
+        // this.#rec(pos2, range, directionX, directionY, directionZ);
+        // this.#rec(pos3, range, directionX, directionY, directionZ);
+
+        // this.#check(startPosition, Infinity, -1, 1, -1);
+        // this.#check(startPosition, Infinity, -1, 1, 1);
+        // this.#check(startPosition, Infinity, 1, 1, -1);
+        // this.#check(startPosition, Infinity, 1, 1, 1);
+
+        this.#check(startPosition, Infinity, -1, 1, 0);
+        // this.#check(startPosition, Infinity, 0, 1, -1);
+        this.#check(startPosition, Infinity, 1, -1, 0);
+        // this.#check(startPosition, Infinity, 0, 1, 1);
 
         this.#colorise(this.#moves);
         this.#colorise(this.#movesToKill);
