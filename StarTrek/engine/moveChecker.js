@@ -1,4 +1,5 @@
 import figureTypes from "./figureTypes.js";
+import ChessPosition from "./chessPosition.js";
 
 class MoveChecker {
     static #desk;
@@ -37,108 +38,34 @@ class MoveChecker {
         return result;
     }
 
-    static moves = [];
+    static #moves = [];
+    static #movesToKill = [];
     
     static #rec(position, range, direction) {
         if (range == 0) return;
         if (this.#desk.get(position) == null) return;
-        if (this.#desk.get(position).figure != null) return;
+        if (this.#desk.get(position).figure != null) {
+            
+            this.#movesToKill.push(this.#desk.get(position));
+            return;
+        }
 
-        this.moves.push(this.#desk.get(position));
+        this.#moves.push(this.#desk.get(position));
 
-        var pos1 = {
-            layer: parseInt(position.layer),
-            x: parseInt(position.x) + direction,
-            z: position.z
-        };
+        var pos1 = new ChessPosition(position);
+        pos1.x += direction;
 
-        var pos2 = {
-            layer: parseInt(position.layer) + 1,
-            x: parseInt(position.x) + direction + 2,
-            z: position.z
-        };
+        var pos2 = new ChessPosition(position);
+        pos2.layer += 1;
+        pos2.x += direction + 2;
 
-        var pos3 = {
-            layer: parseInt(position.layer) + 2,
-            x: parseInt(position.x) + direction + 4,
-            z: position.z
-        };
+        var pos3 = new ChessPosition(position);
+        pos3.layer += 2;
+        pos3.x += direction + 4;
 
         this.#rec(pos1, range - 1, direction);
         this.#rec(pos2, range - 1, direction);
         this.#rec(pos3, range - 1, direction);
-    }
-
-    static #checkUpperLayerMoves(startPosition, range, direction) {
-        let newLayer = parseInt(startPosition.layer) + 1;
-        let newXPos = parseInt(startPosition.x) + 1;
-        console.log(newXPos);  
-        let newRange = range ;//- (parseInt(startPosition.x) + 2 - newXPos);
-
-        let newStartPos = {
-            layer: newLayer,
-            x: newXPos,
-            z: startPosition.z
-        };
-
-        return this.#checkXEnableMoves(newStartPos, newRange, direction);
-    }
-
-    static #checkXEnableMoves(startPosition, range, direction) {
-        var enableMoves = [];
-        console.log("pizda " + startPosition.layer + " " + startPosition.x + " " + startPosition.z);
-        // if (startPosition.layer > 2) {
-        //     return {
-        //         enableMoves: enableMoves,
-        //         moveToKill: null
-        //     };
-        // }
-
-        for (var i = 0; i <= range - 1; ++i) {
-            var xToCheck = parseInt(startPosition.x) + i*direction;
-            
-            var tile = 
-                this.#desk.get(startPosition.layer, xToCheck, startPosition.z);
-
-            // var tile2 = 
-            //     this.#desk.get(startPosition.layer, startPosition.x, startPosition.z);
-            var tile2 = 
-                this.#desk.get(parseInt(startPosition.layer) + 1, xToCheck + 1, startPosition.z);
-
-            if (tile2 != null)
-            if (tile2.isDouble && ! tile2.figure && (startPosition.layer == 1 || startPosition.layer == 2) && xToCheck < 3) {
-                let positionToCheck = {
-                    layer: startPosition.layer,
-                    x: xToCheck,
-                    z: startPosition.z
-                };
-                let upperMoveInfo = this.#checkUpperLayerMoves(positionToCheck, range - i, direction);
-                enableMoves = enableMoves.concat(upperMoveInfo.enableMoves);
-            }
-
-            if (tile == null /* || tile2 == null*/) {
-                console.log("hui " + enableMoves.length);
-                return {
-                    enableMoves: enableMoves,
-                    moveToKill: null
-                };
-            }
-
-            if (tile.figure != null) {
-
-                return {
-                    enableMoves: enableMoves,
-                    moveToKill: tile
-                };
-            }
-
-            enableMoves.push(tile);
-        }
-
-        return {
-            enableMoves: enableMoves,
-            moveToKill: null
-        };
     }
 
     static #checkDiagEnableMoves(startPosition, range, directionX, directionZ) {
@@ -175,38 +102,33 @@ class MoveChecker {
         };
     }
 
-    static #colorise() {
-        this.moves.forEach(e => e.color = '');
+    static #colorise(tiles) {
+        tiles.forEach(e => e.color = '');
     }
 
     static #checkPawn (startPosition, endPosition) {
         var direction = -1;
         
-        var pos1 = {
-            layer: parseInt(startPosition.layer),
-            x: parseInt(startPosition.x) + direction,
-            z: startPosition.z
-        };
+        var pos1 = new ChessPosition(startPosition);
+        pos1.x += direction;
+        
+        var pos2 = new ChessPosition(startPosition);
+        pos2.layer += + 1;
+        pos2.x += direction + 2;
 
-        var pos2 = {
-            layer: parseInt(startPosition.layer) + 1,
-            x: parseInt(startPosition.x) + direction + 2,
-            z: startPosition.z
-        };
+        var pos3 = new ChessPosition(startPosition);
+        pos3.layer += 2;
+        pos3.x += direction + 4;
 
-        var pos3 = {
-            layer: parseInt(startPosition.layer) + 2,
-            x: parseInt(startPosition.x) + direction + 4,
-            z: startPosition.z
-        };
-
-        var range = 2;
+        var range = Infinity;
 
         this.#rec(pos1, range, -1);
         this.#rec(pos2, range, -1);
         this.#rec(pos3, range, -1);
-        console.log(this.moves);
-        this.#colorise();
+        console.log(this.#movesToKill);
+
+        this.#colorise(this.#moves);
+        this.#colorise(this.#movesToKill);
     }
 
     // static #checkPawn(startPosition, endPosition) { 
