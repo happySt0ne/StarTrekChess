@@ -106,10 +106,16 @@ class MoveChecker {
         // this.#check(startPosition, Infinity, 1, 1, -1);
         // this.#check(startPosition, Infinity, 1, 1, 1);
 
-        // this.#check(startPosition, Infinity, 1, -1, 0);
-        this.#check(startPosition, Infinity, -1, 1, -1);
-        // this.#check(startPosition, Infinity, 1, -1, 0);
-        // this.#check(startPosition, Infinity, 0, 1, 1);
+        this.#check(startPosition, Infinity, 1, -1, 0);
+        this.#check(startPosition, Infinity, 1, 1, 0);
+        this.#check(startPosition, Infinity, -1, 1, 0);
+        this.#check(startPosition, Infinity, -1, -1, 0);
+
+
+        this.#check(startPosition, Infinity, 0, 1, -1);
+        this.#check(startPosition, Infinity, 0, -1, -1);
+        this.#check(startPosition, Infinity, 0, 1, 1);
+        this.#check(startPosition, Infinity, 0, -1, 1);
 
         this.#colorise(this.#moves);
         this.#colorise(this.#movesToKill);
@@ -169,7 +175,23 @@ class MoveChecker {
         
     }
     static #checkRook(startPosition, endPosition) {
-        
+        this.#clearMoveBuffers();
+
+        this.#check(startPosition, Infinity, 1, -1, 0);
+        this.#check(startPosition, Infinity, 1, 1, 0);
+        this.#check(startPosition, Infinity, -1, 1, 0);
+        this.#check(startPosition, Infinity, -1, -1, 0);
+
+        this.#check(startPosition, Infinity, 0, 1, -1);
+        this.#check(startPosition, Infinity, 0, -1, -1);
+        this.#check(startPosition, Infinity, 0, 1, 1);
+        this.#check(startPosition, Infinity, 0, -1, 1);
+    
+        var endTile = this.#desk.get(endPosition);
+
+        return (this.#moves.includes(endTile) 
+                || this.#movesToKill.includes(endTile)) 
+                ? true : false; 
     }
     
     static #checkFunc = {
