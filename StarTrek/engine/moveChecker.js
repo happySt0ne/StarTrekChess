@@ -101,79 +101,118 @@ class MoveChecker {
     }
 
     static #checkPawn (startPosition, endPosition) {
-        // this.#check(startPosition, Infinity, -1, 1, -1);
-        // this.#check(startPosition, Infinity, -1, 1, 1);
-        // this.#check(startPosition, Infinity, 1, 1, -1);
-        // this.#check(startPosition, Infinity, 1, 1, 1);
+        this.#clearMoveBuffers();
+        
+        var startFigure = this.#getFigure(startPosition);
+        var xMoveDirection = (startFigure.color == 'white') ? -1 : 1;
+        var moveRange = (startFigure.moveCount === 0) ? 2 : 1; 
+        
+        var endTile = this.#desk.get(endPosition);
+
+        this.#check(startPosition, 1, xMoveDirection, -1, 1);
+        this.#check(startPosition, 1, xMoveDirection, -1, -1);
+        this.#check(startPosition, 1, xMoveDirection, 1, 1);
+        this.#check(startPosition, 1, xMoveDirection, 1, -1);
+                
+        if (this.#movesToKill.includes(endTile)) {
+            return true;
+        }
+
+        this.#clearMoveBuffers();
+
+        this.#check(startPosition, moveRange, xMoveDirection, -1, 0);
+        this.#check(startPosition, moveRange, xMoveDirection, 1, 0);
+        
+        if (this.#moves.includes(endTile)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // TODO: не проверял.
+    static #checkBishop(startPosition, endPosition) {
+        this.#clearMoveBuffers();
+
+        this.#check(startPosition, Infinity, -1, 1, -1);
+        this.#check(startPosition, Infinity, -1, 1, 1);
+        this.#check(startPosition, Infinity, 1, 1, -1);
+        this.#check(startPosition, Infinity, 1, 1, 1);
+
+        this.#check(startPosition, Infinity, -1, -1, -1);
+        this.#check(startPosition, Infinity, -1,-1, 1);
+        this.#check(startPosition, Infinity, 1, -1, -1);
+        this.#check(startPosition, Infinity, 1, -1, 1);
+
+        var endTile = this.#desk.get(endPosition);
+
+        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
+    }
+
+    //TODO: не проверял.
+    static #checkKing(startPosition, endPosition) {
+        this.#clearMoveBuffers();
+
+        // ДИАГОНАЛИ
+        this.#check(startPosition, 1, -1, 1, -1);
+        this.#check(startPosition, 1, -1, 1, 1);
+        this.#check(startPosition, 1, 1, 1, -1);
+        this.#check(startPosition, 1, 1, 1, 1);
+
+        this.#check(startPosition, 1, -1, -1, -1);
+        this.#check(startPosition, 1, -1,-1, 1);
+        this.#check(startPosition, 1, 1, -1, -1);
+        this.#check(startPosition, 1, 1, -1, 1);
+
+        // ВЕРТИКАЛИ:
+        this.#check(startPosition, 1, 1, -1, 0);
+        this.#check(startPosition, 1, 1, 1, 0);
+        this.#check(startPosition, 1, -1, 1, 0);
+        this.#check(startPosition, 1, -1, -1, 0);
+
+        this.#check(startPosition, 1, 0, 1, -1);
+        this.#check(startPosition, 1, 0, -1, -1);
+        this.#check(startPosition, 1, 0, 1, 1);
+        this.#check(startPosition, 1, 0, -1, 1);
+
+        var endTile = this.#desk.get(endPosition);
+
+        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
+    }
+
+    //TODO: не тестировал.
+    static #checkQueen(startPosition, endPosition) {
+        this.#clearMoveBuffers();
+
+        this.#check(startPosition, Infinity, -1, 1, -1);
+        this.#check(startPosition, Infinity, -1, 1, 1);
+        this.#check(startPosition, Infinity, 1, 1, -1);
+        this.#check(startPosition, Infinity, 1, 1, 1);
+
+        this.#check(startPosition, Infinity, -1, -1, -1);
+        this.#check(startPosition, Infinity, -1,-1, 1);
+        this.#check(startPosition, Infinity, 1, -1, -1);
+        this.#check(startPosition, Infinity, 1, -1, 1);
 
         this.#check(startPosition, Infinity, 1, -1, 0);
         this.#check(startPosition, Infinity, 1, 1, 0);
         this.#check(startPosition, Infinity, -1, 1, 0);
         this.#check(startPosition, Infinity, -1, -1, 0);
 
-
         this.#check(startPosition, Infinity, 0, 1, -1);
         this.#check(startPosition, Infinity, 0, -1, -1);
         this.#check(startPosition, Infinity, 0, 1, 1);
         this.#check(startPosition, Infinity, 0, -1, 1);
 
-        this.#colorise(this.#moves);
-        this.#colorise(this.#movesToKill);
+        var endTile = this.#desk.get(endPosition);
+
+        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    // static #checkPawn(startPosition, endPosition) { 
-    //     var startFigure = this.#getFigure(startPosition);
-    //     var moveDirection = (startFigure.color == 'white') ? -1 : 1;
-    //     var enableMoves = [];
-        
-    //     let positionToCheck = {
-    //         layer: startPosition.layer,
-    //         x: parseInt(startPosition.x) + moveDirection,
-    //         z: startPosition.z
-    //     };
-
-    //     if (startFigure.moveCount == 0) {
-
-    //         var moveXInfo = this.#checkXEnableMoves(positionToCheck, 3, moveDirection);
-    //     } else {
-    //         var moveXInfo = this.#checkXEnableMoves(positionToCheck , 1, moveDirection);
-    //     }
-
-    //     enableMoves = enableMoves.concat(moveXInfo.enableMoves);
-        
-    //     var moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, -1);
-    //     if (moveDiagInfo.moveToKill != null) {
-    //         enableMoves.push(moveDiagInfo.moveToKill);
-    //     }
-
-    //     moveDiagInfo = this.#checkDiagEnableMoves(startPosition, 1, moveDirection, 1);
-    //     if (moveDiagInfo.moveToKill != null) {
-    //         enableMoves.push(moveDiagInfo.moveToKill);
-    //     }
-
-    //     enableMoves.forEach(x => x.color = '');
-
-    //     var endTile = this.#desk.get(endPosition);
-
-    //     if (enableMoves.includes(endTile)) {
-    //         return true;
-    //     } 
-
-    //     return false;
-    // }
-    
-    static #checkBishop(startPosition, endPosition) {
-        
-    }
-    static #checkKing(startPosition, endPosition) {
-        
-    }
-    static #checkQueen(startPosition, endPosition) {
-        
-    }
     static #checkKnight(startPosition, endPosition) {
         
     }
+    
     static #checkRook(startPosition, endPosition) {
         this.#clearMoveBuffers();
 
@@ -189,9 +228,7 @@ class MoveChecker {
     
         var endTile = this.#desk.get(endPosition);
 
-        return (this.#moves.includes(endTile) 
-                || this.#movesToKill.includes(endTile)) 
-                ? true : false; 
+        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile); 
     }
     
     static #checkFunc = {
