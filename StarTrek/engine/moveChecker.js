@@ -127,7 +127,6 @@ class MoveChecker {
         return false;
     }
 
-    // TODO: не проверял.
     static #checkBishop(startPosition, endPosition) {
         this.#clearMoveBuffers();
 
@@ -146,7 +145,6 @@ class MoveChecker {
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    //TODO: не проверял.
     static #checkKing(startPosition, endPosition) {
         this.#clearMoveBuffers();
 
@@ -175,7 +173,6 @@ class MoveChecker {
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    //TODO: не тестировал.
     static #checkQueen(startPosition, endPosition) {
         this.#clearMoveBuffers();
 
@@ -205,7 +202,33 @@ class MoveChecker {
     }
 
     static #checkKnight(startPosition, endPosition) {
-        
+        this.#clearMoveBuffers();
+        var dx = [ 2, 2, 1, 1, -1, -1, -2, -2 ];
+        var dz = [ 1, -1, 2, -2, 2, -2, 1, -1 ];
+        var dy = [-1, 0, 1];
+
+        for (var i = 0; i < 8; ++i) {
+            for (var j = 0; j < 3; ++j) {
+
+                var tile = this.#desk.get(
+                    parseInt(startPosition.layer) + dy[j], 
+                    parseInt(startPosition.x) + (dx[i] + 2*dy[j]),
+                    parseInt(startPosition.z) + dz[i]
+                );
+    
+                if (tile == null) continue;
+                if (tile.figure != null) {
+                    this.#movesToKill.push(tile);
+                    continue;
+                }
+    
+                this.#moves.push(tile);
+            }
+        }
+
+        var endTile = this.#desk.get(endPosition);
+
+        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
     
     static #checkRook(startPosition, endPosition) {
