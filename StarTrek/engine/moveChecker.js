@@ -20,8 +20,8 @@ class MoveChecker {
 
     /**
      * 
-     * @param {Object} startPosition - должен иметь в себе layer, x, z
-     * @param {Object} endPosition - должен иметь в себе layer, x, z
+     * @param {ChessPosition} startPosition - должен иметь в себе layer, x, z
+     * @param {ChessPosition} endPosition - должен иметь в себе layer, x, z
      * @returns {boolean} - Возможен ли данный ход
      */
     static checkMove(startPosition, endPosition) {
@@ -57,13 +57,13 @@ class MoveChecker {
         pos1.z += directionZ;
 
         var pos2 = new ChessPosition(position);
-        pos2.layer += directionY * 1;
-        pos2.x += directionX + 2*(-directionX);
+        pos2.layer += directionY;
+        pos2.x += directionX + 2*(directionY);
         pos2.z += directionZ;
 
         var pos3 = new ChessPosition(position);
         pos3.layer += directionY * 2;
-        pos3.x += directionX + 4*(-directionX);
+        pos3.x += directionX + 4*(directionY);
         pos3.z += directionZ;
 
         this.#rec(pos1, range - 1, directionX, directionY, directionZ);
@@ -87,12 +87,12 @@ class MoveChecker {
 
         var pos2 = new ChessPosition(startPosition);
         pos2.layer += 1*directionY;
-        pos2.x += directionX + 2*(-directionX);
+        pos2.x += directionX + 2*(directionY);
         pos2.z += directionZ;
 
         var pos3 = new ChessPosition(startPosition);
         pos3.layer += 2*directionY;
-        pos3.x += directionX + 4*(-directionX);
+        pos3.x += directionX + 4*(directionY);
         pos3.z += directionZ;
 
         this.#rec(pos1, range, directionX, directionY, directionZ);
@@ -101,38 +101,14 @@ class MoveChecker {
     }
 
     static #checkPawn (startPosition, endPosition) {
-        // var directionX = -1;
-        // var directionY = 1;
-        // var directionZ = -1;
-
-        // var pos1 = new ChessPosition(startPosition);
-        // pos1.x += directionX;
-        // pos1.z += directionZ;
-
-        // var pos2 = new ChessPosition(startPosition);
-        // pos2.layer += 1*directionY;
-        // pos2.x += directionX + 2*(-directionX);
-        // pos2.z += directionZ;
-
-        // var pos3 = new ChessPosition(startPosition);
-        // pos3.layer += 2*directionY;
-        // pos3.x += directionX + 4*(-directionX);
-        // pos3.z += directionZ;
-
-        // var range = Infinity;
-
-        // this.#rec(pos1, range, directionX, directionY, directionZ);
-        // this.#rec(pos2, range, directionX, directionY, directionZ);
-        // this.#rec(pos3, range, directionX, directionY, directionZ);
-
         // this.#check(startPosition, Infinity, -1, 1, -1);
         // this.#check(startPosition, Infinity, -1, 1, 1);
         // this.#check(startPosition, Infinity, 1, 1, -1);
         // this.#check(startPosition, Infinity, 1, 1, 1);
 
-        this.#check(startPosition, Infinity, -1, 1, 0);
-        // this.#check(startPosition, Infinity, 0, 1, -1);
-        this.#check(startPosition, Infinity, 1, -1, 0);
+        // this.#check(startPosition, Infinity, 1, -1, 0);
+        this.#check(startPosition, Infinity, -1, 1, -1);
+        // this.#check(startPosition, Infinity, 1, -1, 0);
         // this.#check(startPosition, Infinity, 0, 1, 1);
 
         this.#colorise(this.#moves);
