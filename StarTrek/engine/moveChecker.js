@@ -27,15 +27,12 @@ class MoveChecker {
     static checkMove(startPosition, endPosition) {
         var figure = this.#getFigure(startPosition);
 
-        if (!!figure && figure.type in this.#checkFunc) {
-
-            var result = this.#checkFunc[figure.type](startPosition, endPosition);
-        } else {
+        if (!figure || !(figure.type in this.#checkFunc)) {
             alert('Фигура неизвестного типа.');
             return false;
         }
 
-        return result;
+        return this.#checkFunc[figure.type](startPosition, endPosition);
     }
 
     static #moves = [];
@@ -153,7 +150,6 @@ class MoveChecker {
     static #checkKing(startPosition, endPosition) {
         this.#clearMoveBuffers();
 
-        // ДИАГОНАЛИ
         this.#check(startPosition, 1, -1, 1, -1);
         this.#check(startPosition, 1, -1, 1, 1);
         this.#check(startPosition, 1, 1, 1, -1);
@@ -164,7 +160,6 @@ class MoveChecker {
         this.#check(startPosition, 1, 1, -1, -1);
         this.#check(startPosition, 1, 1, -1, 1);
 
-        // ВЕРТИКАЛИ:
         this.#check(startPosition, 1, 1, -1, 0);
         this.#check(startPosition, 1, 1, 1, 0);
         this.#check(startPosition, 1, -1, 1, 0);
