@@ -3,6 +3,7 @@ import {
     containsOnlyDigits
 } from '../supportStuff/usefullFunctions.js';
 import MoveChecker from './moveChecker.js';
+import MoveOrderController from './moveOrderController.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -41,18 +42,10 @@ class FigureController {
 
     static #makeMove(input) {
         var parsedInput = this.#parseMoveInput(input);
+        
         if (!parsedInput) {
             
-            alert(`
-                Введите корректные координаты.
-                Сначала вводятся координаты клетки с 
-                которой нужно сделать ход
-                затем координаты клетки, 
-                куда нужно передвинуть. Cначала 
-                вводится уровень доски (1-самая нижняя), 
-                затем x координата, после чего z.
-                Пример: 111 222`
-            );
+            this.#showRulesAlert();
             return;
         }
 
@@ -61,7 +54,13 @@ class FigureController {
 
         var fromTile = this.#desk.get(from.layer, from.x, from.z);
         var toTile = this.#desk.get(to.layer, to.x, to.z);
-        
+
+        if (!MoveOrderController.isValidTurn(fromTile.figure)) {
+
+            alert('Вы пытаетесь походить не своей фигурой!');
+            return;
+        }
+
         var isValidMove = MoveChecker.checkMove(from, to);
 
         if (!isValidMove) {
@@ -69,6 +68,8 @@ class FigureController {
             alert('Данный ход недопустим.');
             return;
         }
+
+        MoveOrderController.changeTurn();
 
         var figureToMove = fromTile.figure;
 
@@ -99,6 +100,19 @@ class FigureController {
                 z: input[1][2]
             }
         };
+    }
+
+    static #showRulesAlert() {
+        alert(`
+                Введите корректные координаты.
+                Сначала вводятся координаты клетки с 
+                которой нужно сделать ход
+                затем координаты клетки, 
+                куда нужно передвинуть. Cначала 
+                вводится уровень доски (1-самая нижняя), 
+                затем x координата, после чего z.
+                Пример: 111 222`
+        );
     }
 }
 
