@@ -1,6 +1,24 @@
 import figureTypes from "./figureTypes.js";
 import ChessPosition from "./chessPosition.js";
 
+Set.prototype.push = function (element) {
+    this.add(element);
+};
+
+Set.prototype.concat = function (set) {
+    var mergedSet = new Set(this);
+
+    set.forEach((item) => {
+        mergedSet.add(item);
+    })
+
+    return mergedSet;
+};
+
+Set.prototype.includes = function (item) {
+    return this.has(item);
+};
+
 class MoveChecker {
     static #desk;
     
@@ -35,8 +53,8 @@ class MoveChecker {
         return this.#checkFunc[figure.type](startPosition, endPosition);
     }
 
-    static #moves = [];
-    static #movesToKill = [];
+    static #moves = new Set();
+    static #movesToKill = new Set();
     
     static #rec(position, range, directionX, directionY, directionZ) {
         if (range == 0) return;
@@ -73,8 +91,8 @@ class MoveChecker {
     }
 
     static #clearMoveBuffers() {
-        this.#moves = [];
-        this.#movesToKill = [];
+        this.#moves.clear();
+        this.#movesToKill.clear();
     }
 
     static #check(startPosition, range, directionX, directionY, directionZ) {
@@ -97,37 +115,40 @@ class MoveChecker {
         this.#rec(pos3, range, directionX, directionY, directionZ);
     }
 
-    static #checkPawn (startPosition, endPosition) {
+    static getPawnValidMoves(startPosition) {
         this.#clearMoveBuffers();
         
+        var enableMoves = new Set();
         var startFigure = this.#getFigure(startPosition);
         var xMoveDirection = (startFigure.color == 'white') ? -1 : 1;
         var moveRange = (startFigure.moveCount === 0) ? 2 : 1; 
-        
-        var endTile = this.#desk.get(endPosition);
 
         this.#check(startPosition, 1, xMoveDirection, -1, 1);
         this.#check(startPosition, 1, xMoveDirection, -1, -1);
         this.#check(startPosition, 1, xMoveDirection, 1, 1);
         this.#check(startPosition, 1, xMoveDirection, 1, -1);
-                
-        if (this.#movesToKill.includes(endTile)) {
-            return true;
-        }
+
+        enableMoves = enableMoves.concat(this.#movesToKill);
 
         this.#clearMoveBuffers();
 
         this.#check(startPosition, moveRange, xMoveDirection, -1, 0);
         this.#check(startPosition, moveRange, xMoveDirection, 1, 0);
-        
-        if (this.#moves.includes(endTile)) {
-            return true;
-        }
 
-        return false;
+        enableMoves = enableMoves.concat(this.#moves);
+        
+        return enableMoves;
     }
 
-    static #checkBishop(startPosition, endPosition) {
+    static #checkPawn (startPosition, endPosition) {
+        var endTile = this.#desk.get(endPosition);
+
+        var moves = this.getPawnValidMoves(startPosition);
+
+        return moves.includes(endTile);
+    }
+
+    static getBishopValidMoves(startPosition) {
         this.#clearMoveBuffers();
 
         this.#check(startPosition, Infinity, -1, 1, -1);
@@ -140,12 +161,18 @@ class MoveChecker {
         this.#check(startPosition, Infinity, 1, -1, -1);
         this.#check(startPosition, Infinity, 1, -1, 1);
 
+        return this.#moves.concat(this.#movesToKill);
+    }
+
+    static #checkBishop(startPosition, endPosition) {
+        this.getBishopValidMoves(startPosition);
+
         var endTile = this.#desk.get(endPosition);
 
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    static #checkKing(startPosition, endPosition) {
+    static getKingValidMoves(startPosition) {
         this.#clearMoveBuffers();
 
         this.#check(startPosition, 1, -1, 1, -1);
@@ -168,12 +195,18 @@ class MoveChecker {
         this.#check(startPosition, 1, 0, 1, 1);
         this.#check(startPosition, 1, 0, -1, 1);
 
+        return this.#moves.concat(this.#movesToKill);
+    }
+
+    static #checkKing(startPosition, endPosition) {
+        this.getKingValidMoves(startPosition);
+
         var endTile = this.#desk.get(endPosition);
 
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    static #checkQueen(startPosition, endPosition) {
+    static getQueenValidMoves(startPosition) {
         this.#clearMoveBuffers();
 
         this.#check(startPosition, Infinity, -1, 1, -1);
@@ -196,12 +229,18 @@ class MoveChecker {
         this.#check(startPosition, Infinity, 0, 1, 1);
         this.#check(startPosition, Infinity, 0, -1, 1);
 
+        return this.#moves.concat(this.#movesToKill);
+    }
+
+    static #checkQueen(startPosition, endPosition) {
+        this.getQueenValidMoves(startPosition);
+
         var endTile = this.#desk.get(endPosition);
 
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
 
-    static #checkKnight(startPosition, endPosition) {
+    static getKnightValidMoves(startPosition) {
         this.#clearMoveBuffers();
         var dx = [ 2, 2, 1, 1, -1, -1, -2, -2 ];
         var dz = [ 1, -1, 2, -2, 2, -2, 1, -1 ];
@@ -225,13 +264,19 @@ class MoveChecker {
                 this.#moves.push(tile);
             }
         }
+        this.#colorise(this.#moves.concat(this.#movesToKill));
+        return this.#moves.concat(this.#movesToKill);
+    }
+
+    static #checkKnight(startPosition, endPosition) {
+        this.getKnightValidMoves(startPosition);
 
         var endTile = this.#desk.get(endPosition);
 
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
     }
-    
-    static #checkRook(startPosition, endPosition) {
+
+    static getRookValidMoves(startPosition) {
         this.#clearMoveBuffers();
 
         this.#check(startPosition, Infinity, 1, -1, 0);
@@ -243,7 +288,13 @@ class MoveChecker {
         this.#check(startPosition, Infinity, 0, -1, -1);
         this.#check(startPosition, Infinity, 0, 1, 1);
         this.#check(startPosition, Infinity, 0, -1, 1);
+
+        return this.#moves.concat(this.#movesToKill);
+    }
     
+    static #checkRook(startPosition, endPosition) {
+        this.getRookValidMoves(startPosition);
+
         var endTile = this.#desk.get(endPosition);
 
         return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile); 
