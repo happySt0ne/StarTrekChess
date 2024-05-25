@@ -319,6 +319,32 @@ class MoveChecker {
         [figureTypes.Rook]: (startPosition, endPosition) => 
             this.#checkRook(startPosition, endPosition)
     }
+
+    static getMoves(fromTile) {
+        var tilePos = this.#desk.getTilePosition(fromTile);
+
+        return this.#getMoves[fromTile.figure.type](tilePos);
+    }
+
+    static #getMoves = {
+        [figureTypes.Pawn]: (startPosition) => 
+            this.getPawnValidMoves(startPosition),
+    
+        [figureTypes.Bishop]: (startPosition) => 
+            this.getBishopValidMoves(startPosition),
+    
+        [figureTypes.King]: (startPosition) => 
+            this.getKingValidMoves(startPosition),
+    
+        [figureTypes.Queen]: (startPosition) => 
+            this.getQueenValidMoves(startPosition),
+    
+        [figureTypes.Knight]: (startPosition) => 
+            this.getKnightValidMoves(startPosition),
+    
+        [figureTypes.Rook]: (startPosition) => 
+            this.getRookValidMoves(startPosition)
+    }
 }
 
 export default MoveChecker;
