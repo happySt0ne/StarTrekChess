@@ -191,11 +191,11 @@ class MoveChecker {
     }
 
     static #checkKing(startPosition, endPosition) {
-        this.getKingValidMoves(startPosition);
+        var kingMoves = this.getKingValidMoves(startPosition);
 
         var endTile = this.#desk.get(endPosition);
 
-        return this.#moves.includes(endTile) || this.#movesToKill.includes(endTile);
+        return kingMoves.includes(endTile);
     }
 
     static getQueenValidMoves(startPosition) {
