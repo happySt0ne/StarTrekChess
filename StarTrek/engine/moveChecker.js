@@ -1,5 +1,6 @@
 import figureTypes from "./figureTypes.js";
 import ChessPosition from "./chessPosition.js";
+import Game from "./game.js";
 
 class MoveChecker {
     static #desk;
@@ -177,7 +178,16 @@ class MoveChecker {
         this.#check(startPosition, 1, 0, 1, 1);
         this.#check(startPosition, 1, 0, -1, 1);
 
-        return this.#moves.concat(this.#movesToKill);
+        var kingMoves = this.#moves.concat(this.#movesToKill);
+
+        var playerColor = this.#desk.get(startPosition).figure.color; 
+        var enemyColor = (playerColor === 'black') ? 'white' : 'black';
+
+        var enemyMoves = this.getAllMoves(enemyColor, figureTypes.King);
+
+        kingMoves.removeElements(enemyMoves).forEach(t => t.color = '');
+        
+        return kingMoves.removeElements(enemyMoves);
     }
 
     static #checkKing(startPosition, endPosition) {
@@ -326,6 +336,21 @@ class MoveChecker {
     
         [figureTypes.Rook]: (startPosition) => 
             this.getRookValidMoves(startPosition)
+    }
+
+    static getAllMoves(playerSide, exceptType) {
+        var result = new Set();
+
+        for (const figure of Game.getInstance().getFigures(playerSide)) {
+
+            if (figure.type === exceptType) continue;
+
+            var tile = this.#desk.get(figure);
+            var figureMoves = this.getMoves(tile);
+            var result = result.concat(figureMoves);
+        }
+
+        return result;
     }
 }
 
