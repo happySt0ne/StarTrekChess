@@ -19,33 +19,41 @@ class SpecialStatesChecker {
      * @returns 
      */
     static isCheck(playerSide) {   
-        var playerSideToCheck = (playerSide === 'black') ? 'white' : 'black';
-       
-        var tilesUnderAttack = this.#getAllMoves(playerSideToCheck);
+        var playerSideToCheck = (playerSide === 'black') ? 'white' : 'black';       
+        var tilesUnderAttack = MoveChecker.getAllMoves(playerSideToCheck);
 
-        var kingFigure = 
-            Game.getInstance().getFigures(playerSide)
-            .find(f => f.type === figureTypes.King);
-
-        // TODO: убери это после того как закончишь всё тестить.
-        if (kingFigure == null) {
-            console.log(`у стороны ${playerSide} нет короля!`);
-            return;
-        }  
-
-        var kingTile = this.#desk.get(kingFigure);
+        var kingTile = this.#getKingTileByColor(playerSide);
         
         return tilesUnderAttack.includes(kingTile);
     }
 
+    static isCheckAndMate(playerSide) {
+        var isCheck = this.isCheck(playerSide);
+
+        var kingMoves = this.#getKingMovesByColor(playerSide);
+
+        kingMoves = [...kingMoves].filter(tile => tile.figure.color !== playerSide);
+
+        return kingMoves.length === 0 && isCheck;
+    }
+
     static isStalemate(playerSide) {
-        var enemyColor = playerSide === 'black' ? 'white' : 'black';
+        var moves = MoveChecker.getAllMoves(playerSide);
 
-        var moves = this.#getAllMoves(playerSide);
+        return moves.size === 0;
+    }
 
+    static #getKingMovesByColor(playerSide) { 
+        var kingTile = this.#getKingTileByColor(playerSide);
+        var kingMoves = MoveChecker.getMoves(kingTile);
+
+        return kingMoves;
+    }
+    
+    static #getKingTileByColor(playerSide) {
         var kingFigure = 
-            Game.getInstance().getFigures(playerSide)
-            .find(f => f.type === figureTypes.King);
+        Game.getInstance().getFigures(playerSide)
+        .find(f => f.type === figureTypes.King);
 
         // TODO: убери это после того как закончишь всё тестить.
         if (kingFigure == null) {
@@ -53,31 +61,8 @@ class SpecialStatesChecker {
             return;
         }  
 
-        var kingTile = this.#desk.get(kingFigure);
-        var kingMoves = MoveChecker.getMoves(kingTile);
-
-        var enemyMoves = this.#getAllMoves(enemyColor);
-
-        var kingMovesForDelete = kingMoves.intersection(enemyMoves);
-
-        moves = moves.removeElements(kingMovesForDelete);
-        
-        return moves.size === 0;
+        return this.#desk.get(kingFigure);
     }
-    
-    static #getAllMoves(playerSide) {
-        var result = new Set();
-
-        for (const figure of Game.getInstance().getFigures(playerSide)) {
-
-            var tile = this.#desk.get(figure);
-            var figureMoves = MoveChecker.getMoves(tile);
-            var result = result.concat(figureMoves);
-        }
-
-        return result;
-    }
-
 }
 
 export default SpecialStatesChecker;
