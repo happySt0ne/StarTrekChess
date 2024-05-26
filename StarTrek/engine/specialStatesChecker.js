@@ -32,7 +32,7 @@ class SpecialStatesChecker {
 
         var kingMoves = this.#getKingMovesByColor(playerSide);
 
-        kingMoves = [...kingMoves].filter(tile => tile.figure.color !== playerSide);
+        kingMoves = [...kingMoves].filter(tile => tile.figure == null || tile.figure.color !== playerSide);
 
         return kingMoves.length === 0 && isCheck;
     }
