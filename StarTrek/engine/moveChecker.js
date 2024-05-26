@@ -1,24 +1,6 @@
 import figureTypes from "./figureTypes.js";
 import ChessPosition from "./chessPosition.js";
 
-Set.prototype.push = function (element) {
-    this.add(element);
-};
-
-Set.prototype.concat = function (set) {
-    var mergedSet = new Set(this);
-
-    set.forEach((item) => {
-        mergedSet.add(item);
-    })
-
-    return mergedSet;
-};
-
-Set.prototype.includes = function (item) {
-    return this.has(item);
-};
-
 class MoveChecker {
     static #desk;
     
