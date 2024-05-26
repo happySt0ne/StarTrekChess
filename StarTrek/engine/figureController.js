@@ -4,7 +4,8 @@ import {
 } from '../supportStuff/usefullFunctions.js';
 import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
-import SpecialKingStatesChecker from './specialKingStatesChecker.js';
+import SpecialStatesChecker from './specialStatesChecker.js';
+import ChessPosition from './chessPosition.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -15,7 +16,7 @@ class FigureController {
         this.#desk = desk; 
 
         MoveChecker.setDesk(desk);
-        SpecialKingStatesChecker.setDesk(desk);
+        SpecialStatesChecker.setDesk(desk);
     }
 
     static setupUiController() {
@@ -44,10 +45,17 @@ class FigureController {
     }
 
     static #makeMove(input) {
-        var isCheck = SpecialKingStatesChecker.isCheck(MoveOrderController.PlayerTurn);
+        var currentPlayer = MoveOrderController.PlayerTurn;
+
+        var isCheck = SpecialStatesChecker.isCheck(currentPlayer);
+        var isStalemate = SpecialStatesChecker.isStalemate(currentPlayer);
+
+        if (isStalemate) {
+            alert('ПАТ!!! АХАХАХАХАХАХХАХААХАХ');
+        }
 
         if (isCheck) {
-            alert(`ШАХ для ${MoveOrderController.PlayerTurn}!`);
+            alert(`ШАХ для ${currentPlayer}!`);
         }
 
         var parsedInput = this.#parseMoveInput(input);
@@ -98,16 +106,18 @@ class FigureController {
         }
 
         return {
-            from: {
-                layer: input[0][0],
-                x: input[0][1],
-                z: input[0][2]
-            },
-            to: {
-                layer: input[1][0],
-                x: input[1][1],
-                z: input[1][2]
-            }
+            from: new ChessPosition(input[0][0], input[0][1], input[0][2]),
+            to: new ChessPosition(input[1][0], input[1][1], input[1][2])
+            // from: {
+            //     layer: input[0][0],
+            //     x: input[0][1],
+            //     z: input[0][2]
+            // },
+            // to: {
+            //     layer: input[1][0],
+            //     x: input[1][1],
+            //     z: input[1][2]
+            // }
         };
     }
 
