@@ -4,6 +4,7 @@ import {
 } from '../supportStuff/usefullFunctions.js';
 import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
+import SpecialKingStatesChecker from './specialKingStatesChecker.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -12,7 +13,9 @@ class FigureController {
 
     static setDesk(desk) {
         this.#desk = desk; 
+
         MoveChecker.setDesk(desk);
+        SpecialKingStatesChecker.setDesk(desk);
     }
 
     static setupUiController() {
@@ -41,6 +44,12 @@ class FigureController {
     }
 
     static #makeMove(input) {
+        var isCheck = SpecialKingStatesChecker.isCheck(MoveOrderController.PlayerTurn);
+
+        if (isCheck) {
+            alert(`ШАХ для ${MoveOrderController.PlayerTurn}!`);
+        }
+
         var parsedInput = this.#parseMoveInput(input);
         
         if (!parsedInput) {
@@ -69,12 +78,12 @@ class FigureController {
             return;
         }
 
-        MoveOrderController.changeTurn();
-
         var figureToMove = fromTile.figure;
-
+        
         fromTile.figure = null;
         toTile.figure = figureToMove;
+
+        MoveOrderController.changeTurn();
     }
 
     static #parseMoveInput(input) {
