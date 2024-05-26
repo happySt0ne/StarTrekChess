@@ -5,6 +5,7 @@ import {
 
 import * as shader from './shaders/shadersPackage.js'
 import Game from './engine/game.js';
+import './supportStuff/setExtencions.js'
 
 function main() { 
     var gl = document.querySelector("#canvas").getContext("webgl");
