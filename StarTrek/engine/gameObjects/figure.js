@@ -10,6 +10,10 @@ class Figure extends GameObject {
     #moveCount = -1;
     #isAlive = true;
 
+    get isAlive() {
+        return this.#isAlive;
+    }
+
     get moveCount() {
         return this.#moveCount;
     }

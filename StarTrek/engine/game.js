@@ -11,8 +11,14 @@ class Game {
     #blackFigures = [];
     #desk;
 
+    static getInstance() {
+        return this.#gameInstance;
+    }
+    
+
     getFigures(color) {
-        return (color == 'black') ? this.#blackFigures : this.#whiteFigures;
+        var result = (color == 'black') ? this.#blackFigures : this.#whiteFigures;
+        return result.filter(f => f.isAlive);
     } 
 
     #setupGame(setupData) {
@@ -31,15 +37,19 @@ class Game {
     }
 
     #createFigures() {
-        this.#blackFigures.push(new Figure(0, 0, -500, 'black', figureTypes.Pawn));
-        this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Queen));
-        this.#blackFigures.push(new Figure(0, 0, -500, 'black', figureTypes.Pawn));
+        this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.King));
+        // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Pawn));
+        
+        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
+        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.King));
     }
 
     #arrangeFigures() {
-        this.#desk.get(3, 4, 2).setFigure(this.#blackFigures[0]);
-        this.#desk.get(2, 3, 3).setFigure(this.#whiteFigures[0]);
-        this.#desk.get(1, 2, 1).setFigure(this.#blackFigures[1]);
+        this.#desk.get(1, 4, 4).setFigure(this.#whiteFigures[0]);
+        // this.#desk.get(1, 4, 3).setFigure(this.#whiteFigures[1]);
+
+        this.#desk.get(1, 3, 4).setFigure(this.#blackFigures[0]);
+        this.#desk.get(3, 1, 1).setFigure(this.#blackFigures[1]);
     }
 
     constructor(setupData) {
