@@ -87,19 +87,28 @@ class FigureController {
             alert(`Так будет шах для тебя (${currentPlayer}), поэтому нельзя!`);
             
             toTile.figure = oldToTileFigure;
-            toTile.figure.awake();
+            if (toTile.figure != null) {
 
+                toTile.figure.awake();
+            }
+            
             fromTile.figure = figureToMove;
-            fromTile.figure.awake();
+            if (fromTile.figure != null) {
+
+                fromTile.figure.awake();
+            }
+
             return;
         }
         
         if (SpecialStatesChecker.isCheckAndMate(enemyPlayer)) {
             alert(`МААТ! победил ${currentPlayer}`);
+            return; // TODO: Сюда нормальный обработчик.
         }
 
         if (SpecialStatesChecker.isStalemate(enemyPlayer)) {
             alert('ПАТ!!! АХАХАХАХАХАХХАХААХАХ');
+            return; // TODO: Сюда нормальный обработчик.
         }
 
         if (SpecialStatesChecker.isCheck(enemyPlayer)) {
