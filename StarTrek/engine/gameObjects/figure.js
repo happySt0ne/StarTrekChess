@@ -64,6 +64,10 @@ class Figure extends GameObject {
         this.setPosition(0, 0, 500);
     }
 
+    awake() {
+        this.#isAlive = true;
+    }
+
     draw() {
         if (!this.#isAlive) return;
         super.draw();
