@@ -6,6 +6,7 @@ import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
 import SpecialStatesChecker from './specialStatesChecker.js';
 import ChessPosition from './chessPosition.js';
+import Figure from './gameObjects/figure.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -46,17 +47,7 @@ class FigureController {
 
     static #makeMove(input) {
         var currentPlayer = MoveOrderController.PlayerTurn;
-
-        var isCheck = SpecialStatesChecker.isCheck(currentPlayer);
-        var isStalemate = SpecialStatesChecker.isStalemate(currentPlayer);
-
-        if (isStalemate) {
-            alert('ПАТ!!! АХАХАХАХАХАХХАХААХАХ');
-        }
-
-        if (isCheck) {
-            alert(`ШАХ для ${currentPlayer}!`);
-        }
+        var enemyPlayer = currentPlayer === 'black' ? 'white' : 'black';
 
         var parsedInput = this.#parseMoveInput(input);
         
@@ -87,9 +78,33 @@ class FigureController {
         }
 
         var figureToMove = fromTile.figure;
-        
+        var oldToTileFigure = toTile.figure;
+
         fromTile.figure = null;
         toTile.figure = figureToMove;
+
+        if (SpecialStatesChecker.isCheck(currentPlayer)) {
+            alert(`Так будет шах для тебя (${currentPlayer}), поэтому нельзя!`);
+            
+            toTile.figure = oldToTileFigure;
+            toTile.figure.awake();
+
+            fromTile.figure = figureToMove;
+            fromTile.figure.awake();
+            return;
+        }
+        
+        if (SpecialStatesChecker.isCheckAndMate(enemyPlayer)) {
+            alert(`МААТ! победил ${currentPlayer}`);
+        }
+
+        if (SpecialStatesChecker.isStalemate(enemyPlayer)) {
+            alert('ПАТ!!! АХАХАХАХАХАХХАХААХАХ');
+        }
+
+        if (SpecialStatesChecker.isCheck(enemyPlayer)) {
+            alert(`ШАХ для ${enemyPlayer}!`);
+        }
 
         MoveOrderController.changeTurn();
     }
@@ -108,16 +123,6 @@ class FigureController {
         return {
             from: new ChessPosition(input[0][0], input[0][1], input[0][2]),
             to: new ChessPosition(input[1][0], input[1][1], input[1][2])
-            // from: {
-            //     layer: input[0][0],
-            //     x: input[0][1],
-            //     z: input[0][2]
-            // },
-            // to: {
-            //     layer: input[1][0],
-            //     x: input[1][1],
-            //     z: input[1][2]
-            // }
         };
     }
 

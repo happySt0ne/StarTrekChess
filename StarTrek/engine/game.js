@@ -38,18 +38,20 @@ class Game {
 
     #createFigures() {
         this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.King));
-        // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Pawn));
+        this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Rook));
         
         this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
         this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.King));
+        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Pawn));
     }
 
     #arrangeFigures() {
         this.#desk.get(1, 4, 4).setFigure(this.#whiteFigures[0]);
-        // this.#desk.get(1, 4, 3).setFigure(this.#whiteFigures[1]);
+        this.#desk.get(1, 2, 4).setFigure(this.#whiteFigures[1]);
 
-        this.#desk.get(1, 3, 4).setFigure(this.#blackFigures[0]);
-        this.#desk.get(3, 1, 1).setFigure(this.#blackFigures[1]);
+        this.#desk.get(1, 1, 4).setFigure(this.#blackFigures[0]);
+        this.#desk.get(3, 3, 1).setFigure(this.#blackFigures[1]);
+        this.#desk.get(1, 2, 2).setFigure(this.#blackFigures[2]);
     }
 
     constructor(setupData) {
