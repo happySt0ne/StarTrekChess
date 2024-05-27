@@ -36,8 +36,9 @@ class Desk extends GameObject {
     }
 
     #getByPoints(layer, x, z) {
+        console.log(layer-1, x, z-1);
         if (layer > constants.layersCount ||
-            x > constants.deskWidthTiles ||
+            x > 8 ||
             z > constants.deskLengthTiles ||
             layer < 1 ||
             x < 1 || 
@@ -63,32 +64,34 @@ class Desk extends GameObject {
         this.#yGap = yGap;
         this.#desks = []
         
-        this.#desks.push(this.#createLayer(x + 4*Tile.size.width, y - 2*yGap, z, lowerLayerPredicate));
-        this.#desks.push(this.#createLayer(x + 2*Tile.size.width, y - yGap, z, middleLayerPredicate));
-        this.#desks.push(this.#createLayer(x, y, z, topLayerPredicate));
+        this.#desks.push(this.#createLayer(x + 4*Tile.size.width, y - 2*yGap, z, lowerLayerPredicate, 2));
+        this.#desks.push(this.#createLayer(x + 2*Tile.size.width, y - yGap, z, middleLayerPredicate, 1));
+        this.#desks.push(this.#createLayer(x, y, z, topLayerPredicate, 0));
     }
 
     draw() {
-        for (var z = 0; z < constants.layersCount; ++z) {
 
-            for (var i = 0; i < constants.deskWidthTiles; ++i) {
-                
-                for (var j = 0; j < constants.deskLengthTiles; ++j) {
-    
-                    this.#desks[z][i][j].draw();
-                }
+        for (const a of this.#desks.flat(Infinity)) {
+            if (a != null) {
+                a.draw();
             }
         }
     }
 
-    #createLayer(x, y, z, predicate) {
+    #createLayer(x, y, z, predicate, layer) {
         var desk = [];
-    
-        for (var i = 0; i < constants.deskLengthTiles; ++i) {
+
+        for (var i = 0; i < constants.deskWidthTiles; ++i) {
             
             var row = [];
-            for (var j = 0; j < constants.deskWidthTiles; ++j) {
+            
+            for (var k = 0; k < layer*2; ++k) {
+                row.push(null);
+            }
+
+            for (var j = 0; j < constants.deskLengthTiles; ++j) {
                 
+
                 var xPos = x + j*Tile.size.width;
                 var zPos = z + i*Tile.size.depth;
                 row.push(
@@ -98,8 +101,13 @@ class Desk extends GameObject {
                         predicate(j)
                     )
                 );
+
             }
-    
+            
+            for (var k = 0; k < 4 - layer*2; ++k) {
+                row.push(null);
+            }
+            
             desk.push(row);
         }
     
