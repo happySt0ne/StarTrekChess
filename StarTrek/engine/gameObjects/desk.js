@@ -37,9 +37,9 @@ class Desk extends GameObject {
 
     #getByPoints(layer, x, z) {
         console.log(layer-1, x, z-1);
-        if (layer > constants.layersCount ||
-            x > 8 ||
-            z > constants.deskLengthTiles ||
+        if (layer > 4 ||
+            x > 10 ||
+            z > 6 ||
             layer < 1 ||
             x < 1 || 
             z < 1 
@@ -64,9 +64,11 @@ class Desk extends GameObject {
         this.#yGap = yGap;
         this.#desks = []
         
-        this.#desks.push(this.#createLayer(x + 4*Tile.size.width, y - 2*yGap, z, lowerLayerPredicate, 2));
-        this.#desks.push(this.#createLayer(x + 2*Tile.size.width, y - yGap, z, middleLayerPredicate, 1));
+        this.#desks.push(this.#createLayer(x, y - 2*yGap, z, lowerLayerPredicate, 2));
+        // this.#desks.push(this.#createLayer(x, y - yGap, z, middleLayerPredicate, 1));
+        this.#desks.push(this.#createSecondLayer(x, y-yGap, z));
         this.#desks.push(this.#createLayer(x, y, z, topLayerPredicate, 0));
+        this.#desks.push(this.#createFirthLayer(x, y + yGap, z));
     }
 
     draw() {
@@ -78,22 +80,139 @@ class Desk extends GameObject {
         }
     }
 
-    #createLayer(x, y, z, predicate, layer) {
+    #createFirthLayer(x, y, z) {
         var desk = [];
 
-        for (var i = 0; i < constants.deskWidthTiles; ++i) {
-            
-            var row = [];
-            
-            for (var k = 0; k < layer*2; ++k) {
+        for (var j = 0; j < 6; ++j) {
+
+            if (j == 2 || j == 3) {
+                row = [null, null, null, null, null, null, null, null, null, null];
+                desk.push(row);
+                continue;
+            }
+
+            var row = []
+            for (var i = 0; i < 2; ++i) {
+                var xPos = x + Tile.size.width*i;
+                var zPos = z + Tile.size.depth*j;
+
+                row.push(
+                    new Tile(
+                        xPos, y, zPos, 
+                        (i+j)%2 == 0 ? 'white' : 'black',
+                         false
+                    )
+                );
+            }
+    
+            for (var i = 0; i < 8; ++i) {
                 row.push(null);
             }
 
-            for (var j = 0; j < constants.deskLengthTiles; ++j) {
+            desk.push(row);
+        }
+
+        return desk;
+    }
+
+    #createSecondLayer(x, y, z) {
+        var desk = [];
+
+        for (var j = 0; j < 6; ++j) {
+            var row = [];
+
+            if (j == 0 || j == 5) {
+                row = [null, null, null, null, null, null, null, null, 
                 
+                    new Tile(x + 8*Tile.size.width, y, z + j*Tile.size.depth, 
+                        j%2 == 0? 'white' : 'black'),
+
+                    new Tile(x + 9*Tile.size.width, y, z + j*Tile.size.depth, 
+                        j%2 == 1? 'white' : 'black')
+                ];
+
+                desk.push(row);
+                continue;
+            }
+
+            for (var i = 0; i < 10; ++i) {
+                if (i < 3) {
+                    row.push(null);
+                    continue;
+                }
+
+                if (i == 7) {
+                    row.push(null);
+                    continue;
+                }
+
+                if (i > 6) {
+                    if (j == 2 || j == 3) {
+                        row.push(null);
+                        continue;
+                    }
+                    var xPos = x + i*Tile.size.width;
+                    var zPos = z + j*Tile.size.depth;
+                        
+                    row.push(
+                        new Tile(
+                            xPos, y, zPos, 
+                            (j+i)%2 === 0 ? 'white' : 'black',
+                            false
+                        )
+                    );
+                    continue;
+                }
+
+                var xPos = x + i*Tile.size.width;
+                var zPos = z + j*Tile.size.depth;
+                    
+                row.push(
+                    new Tile(
+                        xPos, y, zPos, 
+                        (j+i)%2 === 0 ? 'white' : 'black',
+                        false
+                    )
+                );
+
+            }
+
+            desk.push(row);
+        }
+
+        
+
+        return desk;
+    }
+
+    #createLayer(x, y, z, predicate, layer) {
+        var desk = [];
+
+        for (var i = 0; i < 6; ++i) {
+            
+            if (i == 0 || i == 5) {
+                var row = [null, null, null, null, null, null, null, null, null, null];
+                desk.push(row);
+                continue;
+            }
+
+            var row = [];
+
+            for (var j = 0; j < 10; ++j) {
+                
+                if (j < layer*2+1) {
+                    row.push(null);
+                    continue;
+                }
+
+                if (j > layer*2+4) {
+                    row.push(null);
+                    continue;
+                }
 
                 var xPos = x + j*Tile.size.width;
                 var zPos = z + i*Tile.size.depth;
+                
                 row.push(
                     new Tile(
                         xPos, y, zPos, 
@@ -104,13 +223,9 @@ class Desk extends GameObject {
 
             }
             
-            for (var k = 0; k < 4 - layer*2; ++k) {
-                row.push(null);
-            }
-            
             desk.push(row);
         }
-    
+
         return desk;
     }
 }
