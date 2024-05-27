@@ -185,8 +185,6 @@ class MoveChecker {
 
         var enemyMoves = this.getAllMoves(enemyColor, figureTypes.King);
 
-        kingMoves.removeElements(enemyMoves).forEach(t => t.color = '');
-        
         return kingMoves.removeElements(enemyMoves);
     }
 
