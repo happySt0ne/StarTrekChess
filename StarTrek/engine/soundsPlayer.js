@@ -19,13 +19,13 @@ class SoundsPlayer {
         audio.addEventListener('ended', function() {
             SoundsPlayer.playAmbient();
         });
-        
+
         audio.play();    
     }
 
     static chessMoveSound() {
-        var a = new Audio('../sounds/chessMove.mp3');
-        a.play();
+        var audio = new Audio('../sounds/chessMove.mp3');
+        audio.play();
     }
 }
 
