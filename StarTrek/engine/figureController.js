@@ -5,7 +5,7 @@ import {
 import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
 import SpecialStatesChecker from './specialStatesChecker.js';
-import ChessPosition from './chessPosition.js';
+import ChessPosition from './types/chessPosition.js';
 import SoundsPlayer from './soundsPlayer.js';
 
 const moveInput = document.getElementById('moveInput');

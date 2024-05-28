@@ -3,7 +3,7 @@ import cameraController from "./cameraController.js";
 import GameObject from "./gameObjects/gameObject.js";
 import Desk from "./gameObjects/desk.js";
 import Figure from "./gameObjects/figure.js";
-import figureTypes from "./figureTypes.js";
+import figureTypes from "./types/figureTypes.js";
 import SoundsPlayer from "./soundsPlayer.js";
 
 class Game {

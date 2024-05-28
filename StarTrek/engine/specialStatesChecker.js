@@ -1,6 +1,6 @@
 import MoveChecker from "./moveChecker.js";
 import Game from "./game.js";
-import figureTypes from "./figureTypes.js";
+import figureTypes from "./types/figureTypes.js";
 
 class SpecialStatesChecker {
     static #isWhiteCheck = false;
