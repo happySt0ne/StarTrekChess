@@ -54,9 +54,9 @@ class Figure extends GameObject {
         this.#isAlive = true;
     }
 
-    draw() {
+    draw(position = this.position, size = this.constructor.size) {
         if (!this.#isAlive) return;
-        super.draw();
+        super.draw(position, size);
     }
 }
 
