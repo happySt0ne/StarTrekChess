@@ -5,6 +5,8 @@ import Desk from "./gameObjects/desk.js";
 import Figure from "./gameObjects/figure.js";
 import figureTypes from "./types/figureTypes.js";
 import SoundsPlayer from "./soundsPlayer.js";
+import King from "./gameObjects/chess/king.js";
+import FigureFactory from "./figureFactory.js";
 
 class Game {
     static #gameInstance;
@@ -38,7 +40,7 @@ class Game {
     }
 
     #createFigures() {
-        this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.King));
+        this.#whiteFigures.push(FigureFactory.createFigure(figureTypes.King, 'white'));
         // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Rook));
         
         this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
