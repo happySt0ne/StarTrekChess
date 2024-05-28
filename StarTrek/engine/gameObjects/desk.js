@@ -32,18 +32,13 @@ class Desk extends GameObject {
     }
 
     #getTileByFigure(figure) {
-        return this.#desks.flat(Infinity).find(t => t.figure === figure);
+        return this.#desks.flat(Infinity).find(t => t != null && t.figure === figure);
     }
 
     #getByPoints(layer, x, z) {
-        console.log(layer-1, x, z-1);
-        if (layer > 4 ||
-            x > 10 ||
-            z > 6 ||
-            layer < 1 ||
-            x < 1 || 
-            z < 1 
-        ) {
+        if (layer > 4 || x > 10 ||z > 6 
+            || layer < 1 || x < 1 || z < 1) {
+
             return null;
         }
         
@@ -52,7 +47,7 @@ class Desk extends GameObject {
 
     getTilePosition(tile) {
         var y = (this.position.y - tile.position.y) / this.#yGap;
-        var x = (tile.position.x - this.position.x) / Tile.size.width - 2*y;
+        var x = (tile.position.x - this.position.x) / Tile.size.width;
         var z = (tile.position.z - this.position.z) / Tile.size.depth;
 
         return new ChessPosition(3-y, x+1, z+1);
@@ -65,7 +60,6 @@ class Desk extends GameObject {
         this.#desks = []
         
         this.#desks.push(this.#createLayer(x, y - 2*yGap, z, lowerLayerPredicate, 2));
-        // this.#desks.push(this.#createLayer(x, y - yGap, z, middleLayerPredicate, 1));
         this.#desks.push(this.#createSecondLayer(x, y-yGap, z));
         this.#desks.push(this.#createLayer(x, y, z, topLayerPredicate, 0));
         this.#desks.push(this.#createFirthLayer(x, y + yGap, z));

@@ -34,27 +34,29 @@ class Game {
         this.#desk = new Desk(-300, 200, -500, 150);
 
         FigureController.setDesk(this.#desk);
-        console.log(this.#desk);
-
-        this.#desk.get(2, 9, 1).color = '';
     }
 
     #createFigures() {
-        // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.King));
+        this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.King));
         // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Rook));
         
-        // this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
-        // this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.King));
+        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
+        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.King));
         // this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Pawn));
     }
 
     #arrangeFigures() {
-        // this.#desk.get(1, 4, 4).setFigure(this.#whiteFigures[0]);
-        // this.#desk.get(1, 2, 4).setFigure(this.#whiteFigures[1]);
+        this.#desk.get(1, 8, 4).setFigure(this.#whiteFigures[0]);
 
-        // this.#desk.get(1, 1, 4).setFigure(this.#blackFigures[0]);
-        // this.#desk.get(3, 3, 1).setFigure(this.#blackFigures[1]);
-        // this.#desk.get(1, 2, 2).setFigure(this.#blackFigures[2]);
+        var a = this.#desk.get(2, 9, 6);
+
+        a.color = '';
+        this.#desk.getTilePosition(a);
+        // this.#desk.get(1, 7, 4).setFigure(this.#whiteFigures[1]);
+        
+        this.#desk.get(2, 9, 5).setFigure(this.#blackFigures[0]);
+        this.#desk.get(3, 3, 2).setFigure(this.#blackFigures[1]);
+        // this.#desk.get(1, 7, 2).setFigure(this.#blackFigures[2]);
     }
 
     constructor(setupData) {

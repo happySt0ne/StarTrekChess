@@ -56,12 +56,12 @@ class MoveChecker {
 
         var pos2 = new ChessPosition(position);
         pos2.layer += directionY;
-        pos2.x += directionX + 2*(directionY);
+        pos2.x += directionX;
         pos2.z += directionZ;
 
         var pos3 = new ChessPosition(position);
         pos3.layer += directionY * 2;
-        pos3.x += directionX + 4*(directionY);
+        pos3.x += directionX;
         pos3.z += directionZ;
 
         this.#rec(pos1, range - 1, directionX, directionY, directionZ);
@@ -85,12 +85,12 @@ class MoveChecker {
 
         var pos2 = new ChessPosition(startPosition);
         pos2.layer += 1*directionY;
-        pos2.x += directionX + 2*(directionY);
+        pos2.x += directionX;
         pos2.z += directionZ;
 
         var pos3 = new ChessPosition(startPosition);
         pos3.layer += 2*directionY;
-        pos3.x += directionX + 4*(directionY);
+        pos3.x += directionX;
         pos3.z += directionZ;
 
         this.#rec(pos1, range, directionX, directionY, directionZ);
