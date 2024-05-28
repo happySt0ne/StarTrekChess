@@ -1,5 +1,5 @@
-import figureTypes from "./figureTypes.js";
-import ChessPosition from "./chessPosition.js";
+import figureTypes from "./types/figureTypes.js";
+import ChessPosition from "./types/chessPosition.js";
 import Game from "./game.js";
 
 class MoveChecker {

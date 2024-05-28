@@ -1,7 +1,7 @@
 import Tile from "./tile.js";
 import GameObject from "./gameObject.js";
 import Figure from "./figure.js";
-import ChessPosition from "../chessPosition.js";
+import ChessPosition from "../types/chessPosition.js";
 
 const constants = {
     layersCount: 3,
