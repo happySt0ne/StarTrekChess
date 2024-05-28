@@ -17,18 +17,18 @@ class Game {
     static getInstance() {
         return this.#gameInstance;
     }
-    
+
 
     getFigures(color) {
         var result = (color == 'black') ? this.#blackFigures : this.#whiteFigures;
         return result.filter(f => f.isAlive);
-    } 
+    }
 
     #setupGame(setupData) {
         FigureController.setupUiController();
 
         cameraController.enableCameraController();
-        
+
         GameObject.setBuffers(setupData.positionBuffer, setupData.colorBuffer);
         GameObject.setMatrixLocation(setupData.matrixLocation);
     }
@@ -41,11 +41,9 @@ class Game {
 
     #createFigures() {
         this.#whiteFigures.push(FigureFactory.createFigure(figureTypes.King, 'white'));
-        // this.#whiteFigures.push(new Figure(0, 0, 0, 'white', figureTypes.Rook));
-        
-        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Rook));
-        this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.King));
-        // this.#blackFigures.push(new Figure(0, 0, 0, 'black', figureTypes.Pawn));
+
+        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Rook, 'black'));
+        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.King, 'black'));
     }
 
     #arrangeFigures() {
@@ -56,7 +54,7 @@ class Game {
         a.color = '';
         this.#desk.getTilePosition(a);
         // this.#desk.get(1, 7, 4).setFigure(this.#whiteFigures[1]);
-        
+
         this.#desk.get(2, 9, 5).setFigure(this.#blackFigures[0]);
         this.#desk.get(3, 3, 2).setFigure(this.#blackFigures[1]);
         // this.#desk.get(1, 7, 2).setFigure(this.#blackFigures[2]);
