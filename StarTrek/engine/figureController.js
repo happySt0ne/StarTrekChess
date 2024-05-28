@@ -6,7 +6,7 @@ import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
 import SpecialStatesChecker from './specialStatesChecker.js';
 import ChessPosition from './chessPosition.js';
-import Figure from './gameObjects/figure.js';
+import SoundsPlayer from './soundsPlayer.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -115,6 +115,7 @@ class FigureController {
             alert(`ШАХ для ${enemyPlayer}!`);
         }
 
+        SoundsPlayer.chessMoveSound();
         MoveOrderController.changeTurn();
     }
 
