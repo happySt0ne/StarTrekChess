@@ -3,6 +3,8 @@ import {
     setCuboidColorBlack, 
     setCuboidColorWhite 
 } from "../../shaders/shadersHelper.js";
+import Position from "../types/position.js";
+import Size from "../types/size.js";
 
 class Figure extends GameObject {
     #figureType;
@@ -10,28 +12,16 @@ class Figure extends GameObject {
     #moveCount = -1;
     #isAlive = true;
 
-    get isAlive() {
-        return this.#isAlive;
-    }
+    static size = new Size(50, 50, 50);
 
-    get moveCount() {
-        return this.#moveCount;
-    }
+    get isAlive() { return this.#isAlive; }
 
-    static size = {
-        width: 50,
-        height: 50,
-        depth: 50
-    };
+    get moveCount() { return this.#moveCount; }
 
-    get color() {
-        return this._color;
-    }
+    get color() { return this._color; }
 
-    get type() {
-        return this.#figureType;
-    }
-    
+    get type() { return this.#figureType; }
+
     constructor(x, y, z, color, figureType) {
         super(x, y, z);
 
@@ -52,11 +42,7 @@ class Figure extends GameObject {
     setPosition(x, y, z) {
         this.#moveCount++;
 
-        this.position = {
-            x: x,
-            y: y,
-            z: z
-        };
+        this.position = new Position(x, y, z);
     }
 
     die() {

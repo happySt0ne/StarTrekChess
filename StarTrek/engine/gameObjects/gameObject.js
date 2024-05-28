@@ -1,5 +1,7 @@
 import Camera from "../camera.js";
 import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite } from '../../shaders/shadersHelper.js';
+import Position from "../types/position.js";
+import Size from "../types/size.js";
 
 class GameObject {
     position;
@@ -8,11 +10,7 @@ class GameObject {
     static matrixLocation;
     static colorBuffer;
 
-    static size = {
-        width: 100,
-        height: 100,
-        depth: 100
-    };
+    static size = new Size(100, 100, 100);
 
     static {
         GameObject.gl = document.querySelector("#canvas").getContext("webgl");
@@ -20,11 +18,7 @@ class GameObject {
     }
 
     constructor(x, y, z) {
-        this.position = {
-            x: x,
-            y: y,
-            z: z
-        };
+        this.position = new Position(x, y, z);
     }
 
     /**
@@ -43,15 +37,16 @@ class GameObject {
         setCuboidColors();
     }
 
-    draw() {
+    draw(position = this.position, size = this.constructor.size) {
         GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.colorBuffer);
         this.setObjectColor();
         GameObject.gl.uniformMatrix4fv(GameObject.matrixLocation, false, Camera.getMatrix());
         
         GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.positionBuffer);
+        
         setCuboidPoints(
-            this.position.x, this.position.y, this.position.z, 
-            this.constructor.size.width, this.constructor.size.height, this.constructor.size.depth
+            position.x, position.y, position.z, 
+            size.width, size.height, size.depth
         );
 
         var primitiveType = GameObject.gl.TRIANGLES;
