@@ -113,7 +113,7 @@ function setCuboidColors() {
 
 function setCuboidColorGreen() {
     var array = new Uint8Array(
-        [...Array(118)].map((_, index) => (index % 3 === 1) ? 72 : 0)
+        [...Array(118)].map((_, index) => (index % 3 === 1) ? 80 : 0)
     );
     
     gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
@@ -121,7 +121,7 @@ function setCuboidColorGreen() {
 
 function setCuboidColorRed() {
     var array = new Uint8Array(
-        [...Array(118)].map((_, index) => (index % 3 === 0) ? 139 : 0)
+        [...Array(118)].map((_, index) => (index % 3 === 0) ? 190 : 0)
     );
     
     gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
