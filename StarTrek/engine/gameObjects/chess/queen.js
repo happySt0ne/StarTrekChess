@@ -42,7 +42,16 @@ class Queen extends Figure {
         platformPos.x -= Math.abs(size.width - platformSize.width)/2;
         platformPos.z -= Math.abs(size.depth - platformSize.depth)/2;
         
-        super.draw(platformPos, platformSize);        
+        super.draw(platformPos, platformSize);  
+        
+        platformPos = new Position(this.position);
+        platformPos.y += Queen.size.height;
+        
+        platformSize = new Size(15, 15, 15);
+        platformPos.x -= Math.abs(Queen.size.width - platformSize.width)/2;
+        platformPos.z -= Math.abs(Queen.size.depth - platformSize.depth)/2;
+        
+        super.draw(platformPos, platformSize);  
     }
 }
 
