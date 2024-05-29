@@ -1,4 +1,6 @@
-import {setCuboidColorWhite, setCuboidColorBlack  } from '../../shaders/shadersHelper.js';
+import {
+    setCuboidColorRed, setCuboidColorGreen 
+} from '../../shaders/shadersHelper.js';
 import GameObject from './gameObject.js';
 
 class Tile extends GameObject {    
@@ -62,9 +64,9 @@ class Tile extends GameObject {
 
     setObjectColor() {
         if (this.#color == 'black') {
-            setCuboidColorBlack();
+            setCuboidColorRed();
         } else if (this.#color == 'white') {
-            setCuboidColorWhite();
+            setCuboidColorGreen();
         } else {
             super.setObjectColor();
         }

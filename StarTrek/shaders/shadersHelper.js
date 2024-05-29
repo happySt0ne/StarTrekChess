@@ -111,6 +111,22 @@ function setCuboidColors() {
     gl.STATIC_DRAW);
 }
 
+function setCuboidColorGreen() {
+    var array = new Uint8Array(
+        [...Array(118)].map((_, index) => (index % 3 === 1) ? 72 : 0)
+    );
+    
+    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
+}
+
+function setCuboidColorRed() {
+    var array = new Uint8Array(
+        [...Array(118)].map((_, index) => (index % 3 === 0) ? 139 : 0)
+    );
+    
+    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
+}
+
 function setCuboidColorWhite() {
     gl.bufferData(
         gl.ARRAY_BUFFER,
@@ -125,4 +141,8 @@ function setCuboidColorBlack() {
     gl.STATIC_DRAW);
 }
 
-export {setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite}
+export {
+    setCuboidColors, setCuboidPoints, 
+    setCuboidColorBlack, setCuboidColorWhite, 
+    setCuboidColorRed, setCuboidColorGreen
+}
