@@ -35,6 +35,13 @@ class Bishop extends Figure {
         super.draw();
         super.draw(firstPlatformPos, firstPlatformSize);
         super.draw(secondPlatformPos, secondPlatformSize);
+
+        var platformSize = new Size(50, 5, 50);
+        var platformPos = new Position(this.position);
+        platformPos.x -= Math.abs(Bishop.size.width - platformSize.width)/2;
+        platformPos.z -= Math.abs(Bishop.size.depth - platformSize.depth)/2;
+
+        super.draw(platformPos, platformSize);
     }
 }
 
