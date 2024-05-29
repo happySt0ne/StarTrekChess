@@ -7,6 +7,7 @@ import figureTypes from "./types/figureTypes.js";
 import SoundsPlayer from "./soundsPlayer.js";
 import King from "./gameObjects/chess/king.js";
 import FigureFactory from "./figureFactory.js";
+import FigureArranger from "./figureArranger.js";
 
 class Game {
     static #gameInstance;
@@ -40,17 +41,16 @@ class Game {
     }
 
     #createFigures() {
-        this.#whiteFigures.push(FigureFactory.createFigure(figureTypes.King, 'white'));
-
-        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Knight, 'black'));
-        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.King, 'black'));
+        this.#whiteFigures = FigureFactory.createAllFigures('white');
+        this.#blackFigures = FigureFactory.createAllFigures('black');
     }
 
     #arrangeFigures() {
-        this.#desk.get(1, 8, 4).setFigure(this.#whiteFigures[0]);
+        FigureArranger.setDesk(this.#desk);
+        FigureArranger.setFigures(this.#whiteFigures);
+        FigureArranger.setFigures(this.#blackFigures);
 
-        this.#desk.get(2, 9, 5).setFigure(this.#blackFigures[0]);
-        this.#desk.get(3, 3, 2).setFigure(this.#blackFigures[1]);
+        FigureArranger.arrangeAll();
     }
 
     constructor(setupData) {
