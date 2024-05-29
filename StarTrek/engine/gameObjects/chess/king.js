@@ -9,15 +9,20 @@ class King extends Figure {
     }
 
     draw() {
-        super.draw();
+        var platformSize = new Size(this.constructor.size);
+        platformSize.height /= 2;
         
-        var a = new Position(this.position);
-        a.y += 50;
+        super.draw(this.position, platformSize);
+        
+        var cubePos = new Position(this.position);
+        cubePos.x += 10;
+        cubePos.z += 10;
 
-        var z = new Size(this.constructor.size);
-        z.width += 50;
+        var cubeSize = new Size(this.constructor.size);
+        cubeSize.width -= 20;
+        cubeSize.depth -= 20;
 
-        super.draw(a, z);
+        super.draw(cubePos, cubeSize);
     }
 }
 
