@@ -32,4 +32,11 @@ function containsOnlyDigits(string) {
     return true;
 }
 
-export { isFocusInInputElement, containsOnlyDigits, countLetters }
+function getRandomInt(min, max) {
+    return Math.floor(Math.random()*max + min);
+}
+
+export { 
+    isFocusInInputElement, containsOnlyDigits, countLetters,
+    getRandomInt 
+}
