@@ -39,6 +39,16 @@ class Figure extends GameObject {
         }
     }
 
+    setStrokeColor() {
+        if (this._color == 'black') {
+            setCuboidColorWhite();
+        } else if (this._color == 'white') {
+            setCuboidColorBlack();
+        } else {
+            super.setObjectColor();
+        }
+    }
+
     setPosition(x, y, z) {
         this.#moveCount++;
 

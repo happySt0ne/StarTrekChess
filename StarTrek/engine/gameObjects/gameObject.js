@@ -1,5 +1,9 @@
+import { 
+    setCuboidColors, setCuboidPoints, 
+    setCuboidColorBlack, setCuboidColorWhite,
+    setStrokeCuboidPoints 
+} from '../../shaders/shadersHelper.js';
 import Camera from "../camera.js";
-import { setCuboidColors, setCuboidPoints, setCuboidColorBlack, setCuboidColorWhite } from '../../shaders/shadersHelper.js';
 import Position from "../types/position.js";
 import Size from "../types/size.js";
 
@@ -33,6 +37,10 @@ class GameObject {
         this.colorBuffer = colorBuffer;
     }
 
+    setStrokeColor() {
+        setCuboidColors();
+    }
+
     setObjectColor() {
         setCuboidColors();
     }
@@ -53,6 +61,17 @@ class GameObject {
         var offset = 0;
         var count = 36;
         GameObject.gl.drawArrays(primitiveType, offset, count);
+
+        GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.colorBuffer);
+        this.setStrokeColor();
+
+        GameObject.gl.bindBuffer(GameObject.gl.ARRAY_BUFFER, GameObject.positionBuffer);
+        setStrokeCuboidPoints(
+            position.x, position.y, position.z,
+            size.width, size.height, size.depth
+        );
+
+        GameObject.gl.drawArrays(GameObject.gl.LINES, 0, 24);
     }
 }
 
