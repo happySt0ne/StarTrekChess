@@ -7,6 +7,8 @@ import MoveOrderController from './moveOrderController.js';
 import SpecialStatesChecker from './specialStatesChecker.js';
 import ChessPosition from './types/chessPosition.js';
 import SoundsPlayer from './soundsPlayer.js';
+import Game from './game.js';
+import BotPlayer from './botPlayer.js';
 
 const moveInput = document.getElementById('moveInput');
 
@@ -32,7 +34,7 @@ class FigureController {
             } else if (isEnterPressed && isMoveInputFocused) {
         
                 moveInput.blur();
-                this.#makeMove(moveInput.value);
+                this.makeMove(moveInput.value);
                 this.#clearInput();
             } else if (isEnterPressed) {
         
@@ -45,7 +47,7 @@ class FigureController {
         moveInput.value = '';
     }
 
-    static #makeMove(input) {
+    static makeMove(input) {
         var currentPlayer = MoveOrderController.PlayerTurn;
         var enemyPlayer = currentPlayer === 'black' ? 'white' : 'black';
 
@@ -54,7 +56,7 @@ class FigureController {
         if (!parsedInput) {
             
             this.#showRulesAlert();
-            return;
+            return false;
         }
 
         var from = parsedInput.from;
@@ -66,13 +68,13 @@ class FigureController {
         if (fromTile == null || toTile == null) {
 
             alert(`Вы выбрали некорректную клетку для ${fromTile == null ? 'начала' : 'конца'} хода`);
-            return;
+            return false;
         }
 
         if (!MoveOrderController.isValidTurn(fromTile.figure)) {
 
             alert('Вы пытаетесь походить не своей фигурой!');
-            return;
+            return false;
         }
 
         var isValidMove = MoveChecker.checkMove(from, to);
@@ -80,14 +82,17 @@ class FigureController {
         if (!isValidMove) {
             
             alert('Данный ход недопустим.');
-            return;
+            return false;
         }
 
         if (fromTile.figure != null && toTile.figure != null 
                 && fromTile.figure.color === toTile.figure.color) {
             
-            alert('Ты пытаешься побить свою же фигуру!!!');
-            return;
+            if (Game.gameType != 'bot' && MoveOrderController.PlayerTurn != 'black') {
+
+                alert('Ты пытаешься побить свою же фигуру!!!');
+            }
+            return false;
         }
 
         var figureToMove = fromTile.figure;
@@ -111,7 +116,7 @@ class FigureController {
                 fromTile.figure.awake();
             }
 
-            return;
+            return false;
         }
         
         if (SpecialStatesChecker.isCheckAndMate(enemyPlayer)) {
@@ -130,6 +135,7 @@ class FigureController {
 
         SoundsPlayer.chessMoveSound();
         MoveOrderController.changeTurn();
+        return true;
     }
 
     static #parseMoveInput(input) {
