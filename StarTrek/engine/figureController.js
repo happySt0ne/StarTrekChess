@@ -77,6 +77,11 @@ class FigureController {
             return;
         }
 
+        if (fromTile.figure.color === toTile.figure.color) {
+            alert('Ты пытаешься побить свою же фигуру!!!');
+            return;
+        }
+
         var figureToMove = fromTile.figure;
         var oldToTileFigure = toTile.figure;
 
