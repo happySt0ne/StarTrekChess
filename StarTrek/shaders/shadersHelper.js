@@ -1,5 +1,45 @@
 var gl = document.querySelector("#canvas").getContext("webgl");
 
+function setStrokeCuboidPoints(x, y, z, width, height, depth) {
+    var x2 = x + width;
+    var y2 = y + height;
+    var z2 = z + depth;
+
+    // 12 линий должно быть
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        // нижний
+        x, y, z, x2, y, z,
+        x2, y, z, x2, y, z2,
+        x2, y, z2, x, y, z2,
+        x, y, z2, x, y, z,
+        
+        // передняя
+        x, y, z, x, y2, z,
+        x, y2, z, x2, y2, z,
+        x2, y2, z, x2, y, z,
+        x2, y, z, x, y, z,
+
+        // правая
+        x2, y2, z, x2, y2, z2,
+        x2, y2, z2, x2, y, z2,
+        x2, y, z2, x2, y, z,
+        x2, y, z, x2, y2, z,
+
+        // левая
+        x, y, z, x, y, z2,
+        x, y, z2, x, y2, z2,
+        x, y2, z2, x, y2, z,
+        x, y2, z, x, z, z,
+        
+        // Задняя
+        x, y, z2, x, y2, z2,
+        x, y2, z2, x2, y2, z2,
+        x2, y2, z2, x2, y, z2,
+        x2, y, z2, x, y, z2
+
+    ]), gl.STREAM_DRAW);
+}
+
 function setCuboidPoints(x, y, z, width, height, depth) {
     var x2 = x + width;
     var y2 = y + height;
@@ -144,5 +184,6 @@ function setCuboidColorBlack() {
 export {
     setCuboidColors, setCuboidPoints, 
     setCuboidColorBlack, setCuboidColorWhite, 
-    setCuboidColorRed, setCuboidColorGreen
+    setCuboidColorRed, setCuboidColorGreen,
+    setStrokeCuboidPoints
 }
