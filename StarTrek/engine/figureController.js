@@ -1,6 +1,6 @@
 import { 
     isFocusInInputElement,
-    containsOnlyDigits
+    countLetters
 } from '../supportStuff/usefullFunctions.js';
 import MoveChecker from './moveChecker.js';
 import MoveOrderController from './moveOrderController.js';
@@ -63,6 +63,12 @@ class FigureController {
         var fromTile = this.#desk.get(from.layer, from.x, from.z);
         var toTile = this.#desk.get(to.layer, to.x, to.z);
 
+        if (fromTile == null || toTile == null) {
+
+            alert(`Вы выбрали некорректную клетку для ${fromTile == null ? 'начала' : 'конца'} хода`);
+            return;
+        }
+
         if (!MoveOrderController.isValidTurn(fromTile.figure)) {
 
             alert('Вы пытаетесь походить не своей фигурой!');
@@ -77,7 +83,9 @@ class FigureController {
             return;
         }
 
-        if (fromTile.figure.color === toTile.figure.color) {
+        if (fromTile.figure != null && toTile.figure != null 
+                && fromTile.figure.color === toTile.figure.color) {
+            
             alert('Ты пытаешься побить свою же фигуру!!!');
             return;
         }
@@ -125,19 +133,30 @@ class FigureController {
     }
 
     static #parseMoveInput(input) {
+        const allowedSymbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
         input = input.trim().replace(/\s+/g, ' ').split(' ');
 
         if (input == '' || input == null || input.length < 2 
             || input[0].length < 3 || input[1].length < 3
-            || !containsOnlyDigits(input[0])
-            || !containsOnlyDigits(input[1])) {
+            || !allowedSymbols.includes(input[0][1]) 
+            || !allowedSymbols.includes(input[1][1])
+            || countLetters(input[0]) != 1 
+            || countLetters(input[1]) != 1) {
 
             return false;
         }
 
         return {
-            from: new ChessPosition(input[0][0], input[0][1], input[0][2]),
-            to: new ChessPosition(input[1][0], input[1][1], input[1][2])
+            from: new ChessPosition(
+                input[0][0], 
+                this.convertLetterToCoord(input[0][1]), 
+                input[0][2]
+            ),
+            to: new ChessPosition(
+                input[1][0], 
+                this.convertLetterToCoord(input[1][1]), 
+                input[1][2]
+            )
         };
     }
 
@@ -150,8 +169,12 @@ class FigureController {
                 куда нужно передвинуть. Cначала 
                 вводится уровень доски (1-самая нижняя), 
                 затем x координата, после чего z.
-                Пример: 111 222`
+                Пример: 1h3 2d3`
         );
+    }
+
+    static convertLetterToCoord(char) {
+        return char.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
     }
 }
 
