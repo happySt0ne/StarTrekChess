@@ -1,3 +1,5 @@
+import { getRandomInt } from "../supportStuff/usefullFunctions.js";
+
 class SoundsPlayer {
     static #lastAmbientNumber = 0;
 
@@ -27,10 +29,6 @@ class SoundsPlayer {
         var audio = new Audio('../sounds/chessMove.mp3');
         audio.play();
     }
-}
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random()*max + min);
 }
 
 export default SoundsPlayer;
