@@ -71,7 +71,7 @@ class GameObject {
             size.width, size.height, size.depth
         );
 
-        GameObject.gl.drawArrays(GameObject.gl.LINES, 0, 24);
+        GameObject.gl.drawArrays(GameObject.gl.LINES, 0, 48);
     }
 }
 

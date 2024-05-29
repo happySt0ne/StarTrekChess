@@ -5,7 +5,6 @@ function setStrokeCuboidPoints(x, y, z, width, height, depth) {
     var y2 = y + height;
     var z2 = z + depth;
 
-    // 12 линий должно быть
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
         // нижний
         x, y, z, x2, y, z,
@@ -29,13 +28,19 @@ function setStrokeCuboidPoints(x, y, z, width, height, depth) {
         x, y, z, x, y, z2,
         x, y, z2, x, y2, z2,
         x, y2, z2, x, y2, z,
-        x, y2, z, x, z, z,
+        x, y2, z, x, y, z,
         
         // Задняя
         x, y, z2, x, y2, z2,
         x, y2, z2, x2, y2, z2,
         x2, y2, z2, x2, y, z2,
-        x2, y, z2, x, y, z2
+        x2, y, z2, x, y, z2,
+
+        // Верхняя
+        x, y2, z, x, y2, z2,
+        x, y2, z2, x2, y2, z2,
+        x2, y2, z2, x2, y2, z,
+        x2, y2, z, x, y2, z,
 
     ]), gl.STREAM_DRAW);
 }
