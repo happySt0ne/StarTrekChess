@@ -254,7 +254,7 @@ class MoveChecker {
                 this.#moves.push(tile);
             }
         }
-        this.#colorise(this.#moves.concat(this.#movesToKill));
+
         return this.#moves.concat(this.#movesToKill);
     }
 
