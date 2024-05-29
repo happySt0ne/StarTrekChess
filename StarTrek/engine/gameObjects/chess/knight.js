@@ -31,9 +31,16 @@ class Knight extends Figure {
 
         super.draw(platformPos, platformSize);
 
-        platformSize = new Size(45, 15, 20);
-        platformPos.x += Math.abs(Knight.size.width - platformSize.width) / 2 * direction;
+        if (direction > 0) {
+            platformPos.x += platformSize.width;
+        } 
 
+        platformSize = new Size(20, 15, 20);
+
+        if (direction < 0) {
+            platformPos.x -= platformSize.width;
+        }
+        
         super.draw(platformPos, platformSize);
 
     }

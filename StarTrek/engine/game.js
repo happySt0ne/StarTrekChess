@@ -42,7 +42,7 @@ class Game {
     #createFigures() {
         this.#whiteFigures.push(FigureFactory.createFigure(figureTypes.King, 'white'));
 
-        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Pawn, 'black'));
+        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Knight, 'black'));
         this.#blackFigures.push(FigureFactory.createFigure(figureTypes.King, 'black'));
     }
 
