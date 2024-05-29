@@ -35,7 +35,6 @@ class FigureController {
         
                 moveInput.blur();
                 this.makeMove(moveInput.value);
-                this.#clearInput();
             } else if (isEnterPressed) {
         
                 moveInput.focus();
@@ -48,6 +47,8 @@ class FigureController {
     }
 
     static makeMove(input) {
+        moveInput.value = input;
+
         var currentPlayer = MoveOrderController.PlayerTurn;
         var enemyPlayer = currentPlayer === 'black' ? 'white' : 'black';
 
@@ -135,6 +136,7 @@ class FigureController {
 
         SoundsPlayer.chessMoveSound();
         MoveOrderController.changeTurn();
+        this.#clearInput();
         return true;
     }
 
