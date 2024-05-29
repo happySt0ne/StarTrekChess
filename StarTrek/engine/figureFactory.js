@@ -8,6 +8,28 @@ import Pawn from "./gameObjects/chess/pawn.js";
 import figureTypes from "./types/figureTypes.js";
 
 class FigureFactory {
+    static createAllFigures(color) {
+        var figures = [];
+
+        for (var i = 0; i < 8; ++i) {
+            figures.push(this.createFigure(figureTypes.Pawn, color));
+        }
+
+        figures.push(this.createFigure(figureTypes.Rook, color));
+        figures.push(this.createFigure(figureTypes.Rook, color));
+
+        figures.push(this.createFigure(figureTypes.Bishop, color));
+        figures.push(this.createFigure(figureTypes.Bishop, color));
+
+        figures.push(this.createFigure(figureTypes.Knight, color));
+        figures.push(this.createFigure(figureTypes.Knight, color));
+
+        figures.push(this.createFigure(figureTypes.Queen, color));
+        figures.push(this.createFigure(figureTypes.King, color));
+
+        return figures;
+    }
+
     static createFigure(figureType, color) {
         return this.#createFigure[figureType](color);
     }
