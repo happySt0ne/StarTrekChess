@@ -13,7 +13,7 @@ class Pawn extends Figure {
     draw() {
         super.draw();
 
-        var platformSize = new Size(20, 40, 20);
+        var platformSize = new Size(10, 30, 10);
         var platformPos = new Position(this.position);
         platformPos.x += Math.abs(Pawn.size.width - platformSize.width) / 2;
         platformPos.z += Math.abs(Pawn.size.depth - platformSize.depth) / 2;
@@ -23,7 +23,7 @@ class Pawn extends Figure {
 
         platformPos = new Position(this.position);
         platformPos.y += platformSize.height + Pawn.size.height
-        platformSize = new Size(30, 20, 30);
+        platformSize = new Size(20, 10, 20);
         platformPos.x += Math.abs(Pawn.size.width - platformSize.width) / 2;
         platformPos.z += Math.abs(Pawn.size.depth - platformSize.depth) / 2;
 
