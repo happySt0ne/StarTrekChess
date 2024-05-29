@@ -11,11 +11,16 @@ class Game {
     #whiteFigures = [];
     #blackFigures = [];
     #desk;
+    static #gameType = false;
 
     static getInstance() {
         return this.#gameInstance;
     }
 
+    static playWithBot() {
+        console.log('zalpa');
+        this.#gameType = true;
+    }
 
     getFigures(color) {
         var result = (color == 'black') ? this.#blackFigures : this.#whiteFigures;
@@ -60,6 +65,7 @@ class Game {
         this.#arrangeFigures();
 
         SoundsPlayer.playAmbient();
+        console.log(Game.#gameType);
     }
 
     draw() {

@@ -56,4 +56,17 @@ function main() {
     }
 }
 
-main();
+var playWithBotBtn = document.getElementById('playWithBot');
+var playBtn = document.getElementById('play');
+var popup = document.getElementById('popup');
+
+playWithBotBtn.addEventListener('click', function(event) {
+    popup.style.display = 'none';
+    Game.playWithBot();
+    main();
+});
+
+playBtn.addEventListener('click', function() {
+    popup.style.display = 'none';
+    main();
+});
