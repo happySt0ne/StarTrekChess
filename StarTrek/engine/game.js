@@ -42,22 +42,15 @@ class Game {
     #createFigures() {
         this.#whiteFigures.push(FigureFactory.createFigure(figureTypes.King, 'white'));
 
-        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Rook, 'black'));
+        this.#blackFigures.push(FigureFactory.createFigure(figureTypes.Pawn, 'black'));
         this.#blackFigures.push(FigureFactory.createFigure(figureTypes.King, 'black'));
     }
 
     #arrangeFigures() {
         this.#desk.get(1, 8, 4).setFigure(this.#whiteFigures[0]);
 
-        var a = this.#desk.get(2, 9, 6);
-
-        a.color = '';
-        this.#desk.getTilePosition(a);
-        // this.#desk.get(1, 7, 4).setFigure(this.#whiteFigures[1]);
-
         this.#desk.get(2, 9, 5).setFigure(this.#blackFigures[0]);
         this.#desk.get(3, 3, 2).setFigure(this.#blackFigures[1]);
-        // this.#desk.get(1, 7, 2).setFigure(this.#blackFigures[2]);
     }
 
     constructor(setupData) {
