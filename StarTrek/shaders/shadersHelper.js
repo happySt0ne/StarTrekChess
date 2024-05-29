@@ -108,7 +108,7 @@ function setCuboidColors() {
                 80, 70, 200,
                 80, 70, 200,
         ]),
-    gl.STREAM_DRAW);
+    gl.STATIC_DRAW);
 }
 
 function setCuboidColorGreen() {
@@ -116,7 +116,7 @@ function setCuboidColorGreen() {
         [...Array(118)].map((_, index) => (index % 3 === 1) ? 80 : 0)
     );
     
-    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
 }
 
 function setCuboidColorRed() {
@@ -124,21 +124,21 @@ function setCuboidColorRed() {
         [...Array(118)].map((_, index) => (index % 3 === 0) ? 190 : 0)
     );
     
-    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
 }
 
 function setCuboidColorWhite() {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Uint8Array([...Array(118)].map(() => 255)),
-    gl.STREAM_DRAW);
+    gl.STATIC_DRAW);
 }
 
 function setCuboidColorBlack() {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Uint8Array([...Array(118)].map(() => 0)),
-    gl.STREAM_DRAW);
+    gl.STATIC_DRAW);
 }
 
 export {
