@@ -5,21 +5,25 @@ import Desk from "./gameObjects/desk.js";
 import SoundsPlayer from "./soundsPlayer.js";
 import FigureFactory from "./figureFactory.js";
 import FigureArranger from "./figureArranger.js";
+import BotPlayer from "./botPlayer.js";
 
 class Game {
     static #gameInstance;
     #whiteFigures = [];
     #blackFigures = [];
     #desk;
-    static #gameType = false;
+    static #gameType;
+
+    static get gameType() {
+        return this.#gameType;
+    } 
 
     static getInstance() {
         return this.#gameInstance;
     }
 
     static playWithBot() {
-        console.log('zalpa');
-        this.#gameType = true;
+        this.#gameType = 'bot';
     }
 
     getFigures(color) {
@@ -65,7 +69,10 @@ class Game {
         this.#arrangeFigures();
 
         SoundsPlayer.playAmbient();
-        console.log(Game.#gameType);
+
+        if (Game.gameType == 'bot') {
+            BotPlayer.start(this.#blackFigures, this.#desk);
+        }
     }
 
     draw() {
