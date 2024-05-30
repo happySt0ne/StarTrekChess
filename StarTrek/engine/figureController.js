@@ -121,13 +121,15 @@ class FigureController {
         }
         
         if (SpecialStatesChecker.isCheckAndMate(enemyPlayer)) {
-            alert(`МААТ! победил ${currentPlayer}`);
-            return; // TODO: Сюда нормальный обработчик.
+            
+            Game.getInstance().endGame('МАТ!', currentPlayer);
+            return;
         }
 
         if (SpecialStatesChecker.isStalemate(enemyPlayer)) {
-            alert('ПАТ!!! АХАХАХАХАХАХХАХААХАХ');
-            return; // TODO: Сюда нормальный обработчик.
+            
+            Game.getInstance().endGame('ПАТ!', 'НИКТО');
+            return;
         }
 
         if (SpecialStatesChecker.isCheck(enemyPlayer)) {
@@ -137,6 +139,7 @@ class FigureController {
         SoundsPlayer.chessMoveSound();
         MoveOrderController.changeTurn();
         this.#clearInput();
+
         return true;
     }
 

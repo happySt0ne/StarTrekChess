@@ -39,7 +39,7 @@ function main() {
 
     gl.useProgram(program);
 
-    setInterval(drawScene, 30);
+    Game.setDrawingDelegate(setInterval(drawScene, 30));
     
     function drawScene() {
         setShaderPositionAttrib(positionLocation, positionBuffer);
@@ -58,7 +58,7 @@ function main() {
 
 var playWithBotBtn = document.getElementById('playWithBot');
 var playBtn = document.getElementById('play');
-var popup = document.getElementById('popup');
+var popup = document.getElementById('popupStart');
 
 playWithBotBtn.addEventListener('click', function(event) {
     popup.style.display = 'none';

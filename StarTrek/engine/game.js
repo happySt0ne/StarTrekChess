@@ -12,6 +12,8 @@ class Game {
     #whiteFigures = [];
     #blackFigures = [];
     #desk;
+    static #drawingInterval;
+
     static #gameType;
 
     static get gameType() {
@@ -24,6 +26,10 @@ class Game {
 
     static playWithBot() {
         this.#gameType = 'bot';
+    }
+
+    static setDrawingDelegate(drawingInterval) {
+        this.#drawingInterval = drawingInterval;
     }
 
     getFigures(color) {
@@ -73,6 +79,19 @@ class Game {
         if (Game.gameType == 'bot') {
             BotPlayer.start(this.#blackFigures, this.#desk);
         }
+    }
+
+    endGame(reason, winner) {
+        var endPopup = document.getElementById('popupEnd');
+        endPopup.style.display = 'block';
+
+        var endReason = document.getElementById('endReason');
+        var winnerElement = document.getElementById('winner');
+
+        endReason.innerHTML = reason;
+        winnerElement.innerHTML = `Победил ${winner}`;
+
+        clearInterval(Game.#drawingInterval);
     }
 
     draw() {

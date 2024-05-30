@@ -12,3 +12,44 @@ canvas {
   border-radius: 10px;
   text-align: center;
 }
+
+#popupEnd {
+  display: none;
+  background-color: white;
+}
+
+#popupEnd button {
+  margin-top: 30px;
+}
+
+#popupStart button {
+  margin-right: 30px;
+}
+
+#popupEnd {
+  background-color: aquamarine;
+}
+
+#popupStart {
+  background-color: aquamarine;
+  border-radius: 5%;
+}
+
+.popup {
+  position: fixed;
+  z-index: 9999;
+  border-radius: 10%;
+  padding: 50px;
+  text-align: center;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.popup button {
+  border-radius: 15%;
+  background-color: orange;
+
+  min-width: 100px;
+  height: 40px;
+}

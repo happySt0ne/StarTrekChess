@@ -6,6 +6,7 @@
     
     <link rel="icon" href="chess.ico" type="image/x-icon">
     <link rel="stylesheet" href="./index.css">
+
     <script src="./main.js" type="module"></script>
 </head>
 <body>
@@ -15,10 +16,18 @@
         </form>
     </div>
     
-    <div id="popup">
-        <h2>УААаааааа!!! 3д шахматы!</h2>
+    <div id="popupStart" class="popup">
+        <h2>Добро пожаловать в STAR TRECK CHESS</h2>
         <button id="play">Играть</button>
         <button id="playWithBot">Играть с компьютером</button>
+    </div>
+
+    <div id="popupEnd" class="popup">
+        <h1>Игра окончена!</h1>
+        <h3 id="endReason"></h3>
+        <h3 id="winner"></h3>
+
+        <a href="/index.html"><button>Заново</button></a>
     </div>
     
     <canvas id="canvas"></canvas>
