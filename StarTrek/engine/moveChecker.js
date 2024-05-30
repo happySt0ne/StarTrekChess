@@ -241,7 +241,7 @@ class MoveChecker {
 
                 var tile = this.#desk.get(
                     parseInt(startPosition.layer) + dy[j], 
-                    parseInt(startPosition.x) + (dx[i] + 2*dy[j]),
+                    parseInt(startPosition.x) + (dx[i]),
                     parseInt(startPosition.z) + dz[i]
                 );
     
